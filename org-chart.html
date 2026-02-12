@@ -6,34 +6,45 @@
     <title>Org Chart | OrgViz Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
-            --bg-main: #FAFAFA;
+            --bg-primary: #FAFAFA;
             --bg-card: #FFFFFF;
-            --bg-sidebar: #18181B;
-            --text-primary: #111111;
-            --text-secondary: #555555;
-            --text-tertiary: #999999;
-            --text-sidebar: #A1A1AA;
+            --bg-sidebar: #111111;
+            --bg-subtle: #F4F4F5;
+            --text-primary: #09090B;
+            --text-secondary: #52525B;
+            --text-tertiary: #A1A1AA;
+            --text-inverse: #FAFAFA;
+            --text-sidebar: #D4D4D8;
+            --text-sidebar-active: #FFFFFF;
             --accent: #0D9488;
             --accent-hover: #0F766E;
-            --accent-light: #CCFBF1;
-            --border: #E5E5E5;
-            --border-dark: #D4D4D4;
-            --shadow: 0 1px 3px rgba(0,0,0,0.06);
+            --accent-light: #F0FDFA;
+            --accent-muted: #99F6E4;
+            --border: #E4E4E7;
+            --border-hover: #D4D4D8;
+            --success: #059669;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -1px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.06), 0 4px 6px -2px rgba(0,0,0,0.04);
+            --shadow-card-hover: 0 12px 24px -4px rgba(0,0,0,0.08), 0 4px 8px -2px rgba(0,0,0,0.04);
         }
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-main);
+            background: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.5;
+            line-height: 1.6;
             font-size: 14px;
             overflow: hidden;
+            -webkit-font-smoothing: antialiased;
         }
+        
+        .mono { font-family: 'JetBrains Mono', monospace; }
         
         .app {
             display: flex;
@@ -49,18 +60,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            z-index: 100;
         }
         
         .sidebar-header {
-            padding: 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            width: 100%;
         }
         
         .logo-mark {
-            width: 32px;
-            height: 32px;
-            background: var(--accent);
-            border-radius: 6px;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -68,14 +84,19 @@
             font-weight: 600;
             font-size: 12px;
             text-decoration: none;
+            transition: transform 150ms ease;
+        }
+        
+        .logo-mark:hover {
+            transform: scale(1.05);
         }
         
         .sidebar-nav {
             flex: 1;
-            padding: 12px 8px;
+            padding: 16px 8px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 8px;
         }
         
         .nav-item {
@@ -84,32 +105,73 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
+            border-radius: 12px;
             color: var(--text-sidebar);
             text-decoration: none;
-            font-size: 18px;
             transition: all 150ms ease;
+            position: relative;
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 0;
+            background: var(--accent);
+            border-radius: 0 2px 2px 0;
+            transition: height 150ms ease;
         }
         
         .nav-item:hover {
-            background: rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.06);
             color: white;
         }
         
         .nav-item.active {
-            background: var(--accent);
+            background: rgba(255,255,255,0.08);
             color: white;
         }
         
+        .nav-item.active::before {
+            height: 24px;
+        }
+        
+        .nav-item .tooltip {
+            position: absolute;
+            left: calc(100% + 12px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-sidebar);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 150ms ease;
+            pointer-events: none;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .nav-item:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
         .sidebar-footer {
-            padding: 12px;
-            border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 16px 8px;
+            border-top: 1px solid rgba(255,255,255,0.06);
         }
         
         .user-avatar {
-            width: 32px;
-            height: 32px;
-            background: #3F3F46;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3F3F46 0%, #27272A 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -118,9 +180,15 @@
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
+            transition: all 150ms ease;
         }
         
-        /* Main Content */
+        .user-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        /* Main */
         .main {
             flex: 1;
             margin-left: 64px;
@@ -131,7 +199,7 @@
         
         /* Top Bar */
         .topbar {
-            height: 56px;
+            height: 64px;
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
             display: flex;
@@ -141,8 +209,9 @@
         }
         
         .topbar-title {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
+            letter-spacing: -0.01em;
         }
         
         .topbar-breadcrumb {
@@ -150,13 +219,18 @@
             align-items: center;
             gap: 8px;
             color: var(--text-tertiary);
-            font-size: 13px;
+            font-size: 14px;
             margin-left: 16px;
         }
         
         .topbar-breadcrumb a {
             color: var(--accent);
             text-decoration: none;
+            transition: color 150ms ease;
+        }
+        
+        .topbar-breadcrumb a:hover {
+            color: var(--accent-hover);
         }
         
         .topbar-spacer { flex: 1; }
@@ -164,21 +238,22 @@
         .topbar-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
         }
         
         .btn {
-            height: 32px;
-            padding: 0 12px;
-            border-radius: 6px;
-            font-size: 13px;
+            height: 36px;
+            padding: 0 16px;
+            border-radius: 8px;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            transition: all 150ms ease;
+            gap: 8px;
+            transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
             border: none;
+            font-family: inherit;
         }
         
         .btn-primary {
@@ -188,6 +263,7 @@
         
         .btn-primary:hover {
             background: var(--accent-hover);
+            transform: scale(1.02);
         }
         
         .btn-secondary {
@@ -197,13 +273,13 @@
         }
         
         .btn-secondary:hover {
-            background: var(--bg-main);
-            border-color: var(--border-dark);
+            background: var(--bg-subtle);
+            border-color: var(--border-hover);
         }
         
         /* Toolbar */
         .toolbar {
-            height: 48px;
+            height: 52px;
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
             display: flex;
@@ -227,21 +303,23 @@
         
         .toolbar-btn {
             height: 32px;
-            padding: 0 10px;
+            padding: 0 12px;
             background: transparent;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 13px;
+            font-weight: 500;
             color: var(--text-secondary);
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
             transition: all 150ms ease;
+            font-family: inherit;
         }
         
         .toolbar-btn:hover {
-            background: var(--bg-main);
+            background: var(--bg-subtle);
             color: var(--text-primary);
         }
         
@@ -253,32 +331,37 @@
         .zoom-control {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 2px;
+            background: var(--bg-subtle);
+            border-radius: 8px;
+            padding: 2px;
         }
         
         .zoom-btn {
             width: 28px;
             height: 28px;
             background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
             color: var(--text-secondary);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 150ms ease;
         }
         
         .zoom-btn:hover {
-            background: var(--bg-main);
-            border-color: var(--border-dark);
+            background: var(--bg-card);
+            color: var(--text-primary);
         }
         
         .zoom-level {
             font-size: 12px;
-            color: var(--text-tertiary);
-            min-width: 40px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            min-width: 44px;
             text-align: center;
         }
         
@@ -286,56 +369,75 @@
         .canvas {
             flex: 1;
             overflow: auto;
-            padding: 48px;
+            padding: 64px;
             display: flex;
             justify-content: center;
+            align-items: flex-start;
+            background: 
+                radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
+            background-size: 24px 24px;
+            position: relative;
         }
         
         .org-chart {
             display: flex;
             flex-direction: column;
             align-items: center;
+            transform-origin: center top;
+            transition: transform 200ms ease;
         }
         
         /* Node */
         .node {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 16px 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             min-width: 200px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-sm);
             cursor: pointer;
-            transition: all 150ms ease;
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
         }
         
         .node:hover {
             border-color: var(--accent);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: var(--shadow-card-hover);
+            transform: translateY(-2px);
         }
         
         .node.selected {
             border-color: var(--accent);
             background: var(--accent-light);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
         }
         
         .node-avatar {
-            width: 40px;
-            height: 40px;
-            background: #E5E5E5;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 14px;
-            font-weight: 500;
-            color: var(--text-secondary);
+            font-weight: 600;
             flex-shrink: 0;
+            transition: all 200ms ease;
         }
+        
+        .node:hover .node-avatar {
+            transform: scale(1.05);
+        }
+        
+        /* Department-based avatar colors */
+        .node[data-dept="executive"] .node-avatar { background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%); color: white; }
+        .node[data-dept="engineering"] .node-avatar { background: linear-gradient(135deg, #99F6E4 0%, #5EEAD4 100%); color: #0F766E; }
+        .node[data-dept="finance"] .node-avatar { background: linear-gradient(135deg, #E4E4E7 0%, #D4D4D8 100%); color: #52525B; }
+        .node[data-dept="sales"] .node-avatar { background: linear-gradient(135deg, #CCFBF1 0%, #99F6E4 100%); color: #0F766E; }
+        .node[data-dept="people"] .node-avatar { background: linear-gradient(135deg, #F4F4F5 0%, #E4E4E7 100%); color: #52525B; }
         
         .node-info {
             flex: 1;
@@ -348,6 +450,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            margin-bottom: 2px;
         }
         
         .node-title {
@@ -361,44 +464,45 @@
         .node-badge {
             position: absolute;
             top: -8px;
-            right: -8px;
+            right: 12px;
             background: var(--accent);
             color: white;
             font-size: 10px;
             font-weight: 600;
-            padding: 2px 6px;
+            padding: 3px 8px;
             border-radius: 10px;
+            letter-spacing: 0.02em;
         }
         
-        /* Department Badge */
         .dept-badge {
             display: inline-block;
             font-size: 10px;
             font-weight: 500;
-            padding: 2px 8px;
-            border-radius: 4px;
-            background: var(--bg-main);
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: var(--bg-subtle);
             color: var(--text-secondary);
-            margin-top: 4px;
+            margin-top: 6px;
+            letter-spacing: 0.02em;
         }
+        
+        .dept-badge.engineering { background: var(--accent-light); color: var(--accent); }
+        .dept-badge.finance { background: #F4F4F5; color: #52525B; }
+        .dept-badge.sales { background: #F0FDFA; color: #0D9488; }
+        .dept-badge.people { background: #FAFAFA; color: #71717A; }
         
         /* Connectors */
         .connector-v {
-            width: 1px;
+            width: 2px;
             height: 32px;
-            background: var(--border-dark);
+            background: var(--border-hover);
         }
         
-        .connector-h {
-            height: 1px;
-            background: var(--border-dark);
-        }
-        
-        /* Level Container */
+        /* Level */
         .level {
             display: flex;
             align-items: flex-start;
-            gap: 24px;
+            gap: 32px;
             position: relative;
         }
         
@@ -406,11 +510,10 @@
             content: '';
             position: absolute;
             top: -16px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 200px);
-            height: 1px;
-            background: var(--border-dark);
+            left: 100px;
+            right: 100px;
+            height: 2px;
+            background: var(--border-hover);
         }
         
         /* Branch */
@@ -421,51 +524,150 @@
         }
         
         .branch-connector {
-            width: 1px;
+            width: 2px;
             height: 16px;
-            background: var(--border-dark);
-        }
-        
-        /* Department Section */
-        .dept-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .dept-header {
-            font-size: 11px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-tertiary);
-            padding: 4px 12px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            margin-bottom: 16px;
+            background: var(--border-hover);
         }
         
         .dept-nodes {
             display: flex;
             flex-direction: column;
             gap: 12px;
+            margin-top: 12px;
         }
         
-        /* Floating Panel */
-        .panel {
+        /* Floating Toolbar */
+        .floating-toolbar {
             position: fixed;
-            right: 24px;
-            top: 128px;
-            width: 280px;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(calc(-50% + 32px));
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-radius: 16px;
+            padding: 8px;
+            display: flex;
+            gap: 4px;
+            box-shadow: var(--shadow-lg);
+            z-index: 50;
+        }
+        
+        .floating-btn {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 150ms ease;
+        }
+        
+        .floating-btn:hover {
+            background: var(--bg-subtle);
+            color: var(--text-primary);
+        }
+        
+        .floating-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--border);
+            margin: 8px 4px;
+        }
+        
+        /* Minimap */
+        .minimap {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 160px;
+            height: 100px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            z-index: 50;
+        }
+        
+        .minimap-content {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-subtle);
+            position: relative;
+            padding: 8px;
+        }
+        
+        .minimap-viewport {
+            position: absolute;
+            border: 2px solid var(--accent);
+            border-radius: 4px;
+            background: rgba(13, 148, 136, 0.1);
+            width: 60px;
+            height: 40px;
+            top: 20px;
+            left: 50px;
+        }
+        
+        .minimap-nodes {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transform: scale(0.15);
+            transform-origin: center;
+        }
+        
+        .minimap-node {
+            width: 80px;
+            height: 24px;
+            background: var(--border);
+            border-radius: 4px;
+        }
+        
+        /* Detail Panel */
+        .panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 200ms ease;
+            z-index: 200;
+        }
+        
+        .panel-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            box-shadow: -8px 0 24px rgba(0,0,0,0.08);
+            z-index: 201;
+            transition: right 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .panel.active {
+            right: 0;
         }
         
         .panel-header {
-            padding: 16px;
+            padding: 20px 24px;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
@@ -473,90 +675,143 @@
         }
         
         .panel-title {
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 600;
         }
         
         .panel-close {
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             background: transparent;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             color: var(--text-tertiary);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 150ms ease;
         }
         
         .panel-close:hover {
-            background: var(--bg-main);
+            background: var(--bg-subtle);
             color: var(--text-primary);
         }
         
         .panel-body {
-            padding: 16px;
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+        
+        .panel-profile {
+            text-align: center;
+            margin-bottom: 24px;
         }
         
         .panel-avatar {
-            width: 56px;
-            height: 56px;
-            background: #E5E5E5;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin: 0 auto 12px;
+            font-size: 28px;
+            font-weight: 600;
+            color: white;
+            margin: 0 auto 16px;
         }
         
         .panel-name {
-            font-size: 16px;
+            font-size: 20px;
             font-weight: 600;
-            text-align: center;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
         
         .panel-role {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-secondary);
-            text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .panel-dept-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 20px;
         }
         
         .panel-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
         }
         
         .panel-stat {
             text-align: center;
-            padding: 12px;
-            background: var(--bg-main);
-            border-radius: 6px;
+            padding: 16px;
+            background: var(--bg-subtle);
+            border-radius: 12px;
         }
         
         .panel-stat-value {
-            font-size: 18px;
+            font-size: 24px;
             font-weight: 600;
+            margin-bottom: 4px;
         }
         
         .panel-stat-label {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-tertiary);
         }
         
-        .panel-actions {
-            display: flex;
-            gap: 8px;
+        .panel-section {
+            margin-bottom: 20px;
         }
         
-        .panel-actions .btn {
+        .panel-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+        
+        .panel-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .panel-info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .panel-info-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .panel-info-value {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .panel-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+        }
+        
+        .panel-footer .btn {
             flex: 1;
             justify-content: center;
         }
@@ -564,18 +819,55 @@
 </head>
 <body>
     <div class="app">
-        <!-- Collapsed Sidebar -->
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <a href="index.html" class="logo-mark">OV</a>
             </div>
             
             <nav class="sidebar-nav">
-                <a href="dashboard.html" class="nav-item">▦</a>
-                <a href="org-chart.html" class="nav-item active">⬡</a>
-                <a href="search.html" class="nav-item">⌕</a>
-                <a href="workforce-planning.html" class="nav-item">▤</a>
-                <a href="analytics.html" class="nav-item">◫</a>
+                <a href="dashboard.html" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span class="tooltip">Dashboard</span>
+                </a>
+                <a href="org-chart.html" class="nav-item active">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="5" r="3"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <circle cx="6" cy="17" r="3"></circle>
+                        <circle cx="18" cy="17" r="3"></circle>
+                        <line x1="12" y1="12" x2="6" y2="14"></line>
+                        <line x1="12" y1="12" x2="18" y2="14"></line>
+                    </svg>
+                    <span class="tooltip">Org Chart</span>
+                </a>
+                <a href="search.html" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span class="tooltip">Directory</span>
+                </a>
+                <a href="workforce-planning.html" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    <span class="tooltip">Workforce</span>
+                </a>
+                <a href="analytics.html" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                    <span class="tooltip">Analytics</span>
+                </a>
             </nav>
             
             <div class="sidebar-footer">
@@ -583,7 +875,7 @@
             </div>
         </aside>
         
-        <!-- Main Content -->
+        <!-- Main -->
         <main class="main">
             <div class="topbar">
                 <h1 class="topbar-title">Org Chart</h1>
@@ -595,36 +887,91 @@
                 </div>
                 <div class="topbar-spacer"></div>
                 <div class="topbar-actions">
-                    <button class="btn btn-secondary">Export</button>
-                    <button class="btn btn-primary">+ Add Node</button>
+                    <button class="btn btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Export
+                    </button>
+                    <button class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add Node
+                    </button>
                 </div>
             </div>
             
             <div class="toolbar">
                 <div class="toolbar-group">
-                    <button class="toolbar-btn active">Tree View</button>
-                    <button class="toolbar-btn">Matrix View</button>
+                    <button class="toolbar-btn active" id="treeViewBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="5" r="3"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <circle cx="6" cy="17" r="3"></circle>
+                            <circle cx="18" cy="17" r="3"></circle>
+                        </svg>
+                        Tree View
+                    </button>
+                    <button class="toolbar-btn" id="matrixViewBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        Matrix View
+                    </button>
                 </div>
                 <div class="toolbar-group">
-                    <button class="toolbar-btn">Filter</button>
-                    <button class="toolbar-btn">Search</button>
-                </div>
-                <div class="toolbar-group zoom-control">
-                    <button class="zoom-btn">−</button>
-                    <span class="zoom-level">100%</span>
-                    <button class="zoom-btn">+</button>
+                    <button class="toolbar-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        Filter
+                    </button>
+                    <button class="toolbar-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        Search
+                    </button>
                 </div>
                 <div class="toolbar-group">
-                    <button class="toolbar-btn">Fit View</button>
-                    <button class="toolbar-btn">Fullscreen</button>
+                    <div class="zoom-control">
+                        <button class="zoom-btn" id="zoomOut">−</button>
+                        <span class="zoom-level" id="zoomLevel">100%</span>
+                        <button class="zoom-btn" id="zoomIn">+</button>
+                    </div>
+                </div>
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" id="fitViewBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                        </svg>
+                        Fit View
+                    </button>
+                    <button class="toolbar-btn" id="fullscreenBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <polyline points="9 21 3 21 3 15"></polyline>
+                            <line x1="21" y1="3" x2="14" y2="10"></line>
+                            <line x1="3" y1="21" x2="10" y2="14"></line>
+                        </svg>
+                        Fullscreen
+                    </button>
                 </div>
             </div>
             
             <div class="canvas">
-                <div class="org-chart">
-                    <!-- CEO Level -->
+                <div class="org-chart" id="orgChart">
+                    <!-- CEO -->
                     <div class="branch">
-                        <div class="node selected">
+                        <div class="node selected" data-dept="executive" data-id="1">
                             <div class="node-avatar">AC</div>
                             <div class="node-info">
                                 <div class="node-name">Alex Chen</div>
@@ -636,28 +983,28 @@
                     
                     <div class="connector-v"></div>
                     
-                    <!-- C-Suite Level -->
+                    <!-- C-Suite -->
                     <div class="level">
+                        <!-- CTO Branch -->
                         <div class="branch">
                             <div class="branch-connector"></div>
-                            <div class="node">
+                            <div class="node" data-dept="engineering" data-id="2">
                                 <div class="node-avatar">MB</div>
                                 <div class="node-info">
                                     <div class="node-name">Maria Bell</div>
                                     <div class="node-title">Chief Technology Officer</div>
-                                    <span class="dept-badge">Engineering</span>
+                                    <span class="dept-badge engineering">Engineering</span>
                                 </div>
                             </div>
-                            <div class="connector-v"></div>
                             <div class="dept-nodes">
-                                <div class="node">
+                                <div class="node" data-dept="engineering" data-id="3">
                                     <div class="node-avatar">RL</div>
                                     <div class="node-info">
                                         <div class="node-name">Rachel Lee</div>
                                         <div class="node-title">VP Engineering</div>
                                     </div>
                                 </div>
-                                <div class="node">
+                                <div class="node" data-dept="engineering" data-id="4">
                                     <div class="node-avatar">DK</div>
                                     <div class="node-info">
                                         <div class="node-name">David Kim</div>
@@ -667,19 +1014,19 @@
                             </div>
                         </div>
                         
+                        <!-- CFO Branch -->
                         <div class="branch">
                             <div class="branch-connector"></div>
-                            <div class="node">
+                            <div class="node" data-dept="finance" data-id="5">
                                 <div class="node-avatar">JW</div>
                                 <div class="node-info">
                                     <div class="node-name">John Wu</div>
                                     <div class="node-title">Chief Financial Officer</div>
-                                    <span class="dept-badge">Finance</span>
+                                    <span class="dept-badge finance">Finance</span>
                                 </div>
                             </div>
-                            <div class="connector-v"></div>
                             <div class="dept-nodes">
-                                <div class="node">
+                                <div class="node" data-dept="finance" data-id="6">
                                     <div class="node-avatar">LP</div>
                                     <div class="node-info">
                                         <div class="node-name">Lisa Park</div>
@@ -689,26 +1036,26 @@
                             </div>
                         </div>
                         
+                        <!-- VP Sales Branch -->
                         <div class="branch">
                             <div class="branch-connector"></div>
-                            <div class="node">
+                            <div class="node" data-dept="sales" data-id="7">
                                 <div class="node-avatar">SJ</div>
                                 <div class="node-info">
                                     <div class="node-name">Sarah Johnson</div>
                                     <div class="node-title">VP of Sales</div>
-                                    <span class="dept-badge">Sales</span>
+                                    <span class="dept-badge sales">Sales</span>
                                 </div>
                             </div>
-                            <div class="connector-v"></div>
                             <div class="dept-nodes">
-                                <div class="node">
+                                <div class="node" data-dept="sales" data-id="8">
                                     <div class="node-avatar">MG</div>
                                     <div class="node-info">
                                         <div class="node-name">Mike Garcia</div>
                                         <div class="node-title">Sales Director, West</div>
                                     </div>
                                 </div>
-                                <div class="node">
+                                <div class="node" data-dept="sales" data-id="9">
                                     <div class="node-avatar">ET</div>
                                     <div class="node-info">
                                         <div class="node-name">Emily Torres</div>
@@ -718,14 +1065,15 @@
                             </div>
                         </div>
                         
+                        <!-- CPO Branch -->
                         <div class="branch">
                             <div class="branch-connector"></div>
-                            <div class="node">
+                            <div class="node" data-dept="people" data-id="10">
                                 <div class="node-avatar">KN</div>
                                 <div class="node-info">
                                     <div class="node-name">Karen Nguyen</div>
                                     <div class="node-title">Chief People Officer</div>
-                                    <span class="dept-badge">People</span>
+                                    <span class="dept-badge people">People</span>
                                 </div>
                             </div>
                         </div>
@@ -733,35 +1081,235 @@
                 </div>
             </div>
             
-            <!-- Detail Panel -->
-            <div class="panel">
-                <div class="panel-header">
-                    <span class="panel-title">Employee Details</span>
-                    <button class="panel-close">×</button>
-                </div>
-                <div class="panel-body">
-                    <div class="panel-avatar">AC</div>
-                    <div class="panel-name">Alex Chen</div>
-                    <div class="panel-role">Chief Executive Officer</div>
-                    
-                    <div class="panel-stats">
-                        <div class="panel-stat">
-                            <div class="panel-stat-value">5</div>
-                            <div class="panel-stat-label">Direct Reports</div>
-                        </div>
-                        <div class="panel-stat">
-                            <div class="panel-stat-value">847</div>
-                            <div class="panel-stat-label">Total Org</div>
-                        </div>
-                    </div>
-                    
-                    <div class="panel-actions">
-                        <a href="employee-profile.html" class="btn btn-primary">View Profile</a>
-                        <button class="btn btn-secondary">Edit</button>
-                    </div>
+            <!-- Floating Toolbar -->
+            <div class="floating-toolbar">
+                <button class="floating-btn" id="floatZoomIn" title="Zoom In">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        <line x1="11" y1="8" x2="11" y2="14"></line>
+                        <line x1="8" y1="11" x2="14" y2="11"></line>
+                    </svg>
+                </button>
+                <button class="floating-btn" id="floatZoomOut" title="Zoom Out">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        <line x1="8" y1="11" x2="14" y2="11"></line>
+                    </svg>
+                </button>
+                <div class="floating-divider"></div>
+                <button class="floating-btn" id="floatFit" title="Fit to View">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                    </svg>
+                </button>
+                <button class="floating-btn" id="floatFullscreen" title="Fullscreen">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <polyline points="9 21 3 21 3 15"></polyline>
+                        <line x1="21" y1="3" x2="14" y2="10"></line>
+                        <line x1="3" y1="21" x2="10" y2="14"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Minimap -->
+            <div class="minimap">
+                <div class="minimap-content">
+                    <div class="minimap-viewport"></div>
                 </div>
             </div>
         </main>
+        
+        <!-- Detail Panel -->
+        <div class="panel-overlay" id="panelOverlay"></div>
+        <div class="panel" id="detailPanel">
+            <div class="panel-header">
+                <span class="panel-title">Employee Details</span>
+                <button class="panel-close" id="panelClose">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="panel-body">
+                <div class="panel-profile">
+                    <div class="panel-avatar" id="panelAvatar">AC</div>
+                    <div class="panel-name" id="panelName">Alex Chen</div>
+                    <div class="panel-role" id="panelRole">Chief Executive Officer</div>
+                    <span class="panel-dept-badge" id="panelDept">Executive</span>
+                </div>
+                
+                <div class="panel-stats">
+                    <div class="panel-stat">
+                        <div class="panel-stat-value mono" id="panelReports">5</div>
+                        <div class="panel-stat-label">Direct Reports</div>
+                    </div>
+                    <div class="panel-stat">
+                        <div class="panel-stat-value mono" id="panelTotalOrg">847</div>
+                        <div class="panel-stat-label">Total Org</div>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <div class="panel-section-title">Details</div>
+                    <div class="panel-info-row">
+                        <span class="panel-info-label">Employee ID</span>
+                        <span class="panel-info-value mono" id="panelEmpId">EMP-0001</span>
+                    </div>
+                    <div class="panel-info-row">
+                        <span class="panel-info-label">Start Date</span>
+                        <span class="panel-info-value" id="panelStartDate">Jan 15, 2018</span>
+                    </div>
+                    <div class="panel-info-row">
+                        <span class="panel-info-label">Location</span>
+                        <span class="panel-info-value" id="panelLocation">San Francisco, CA</span>
+                    </div>
+                    <div class="panel-info-row">
+                        <span class="panel-info-label">Email</span>
+                        <span class="panel-info-value" id="panelEmail">alex.chen@acme.com</span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <a href="employee-profile.html" class="btn btn-primary">View Profile</a>
+                <button class="btn btn-secondary">Edit</button>
+            </div>
+        </div>
     </div>
+    
+    <script>
+        // Employee data
+        const employees = {
+            1: { name: 'Alex Chen', initials: 'AC', title: 'Chief Executive Officer', dept: 'Executive', reports: 5, totalOrg: 847, empId: 'EMP-0001', startDate: 'Jan 15, 2018', location: 'San Francisco, CA', email: 'alex.chen@acme.com' },
+            2: { name: 'Maria Bell', initials: 'MB', title: 'Chief Technology Officer', dept: 'Engineering', reports: 8, totalOrg: 234, empId: 'EMP-0012', startDate: 'Mar 1, 2019', location: 'San Francisco, CA', email: 'maria.bell@acme.com' },
+            3: { name: 'Rachel Lee', initials: 'RL', title: 'VP Engineering', dept: 'Engineering', reports: 12, totalOrg: 156, empId: 'EMP-0024', startDate: 'May 15, 2019', location: 'San Francisco, CA', email: 'rachel.lee@acme.com' },
+            4: { name: 'David Kim', initials: 'DK', title: 'VP Infrastructure', dept: 'Engineering', reports: 6, totalOrg: 78, empId: 'EMP-0036', startDate: 'Aug 1, 2020', location: 'Austin, TX', email: 'david.kim@acme.com' },
+            5: { name: 'John Wu', initials: 'JW', title: 'Chief Financial Officer', dept: 'Finance', reports: 4, totalOrg: 52, empId: 'EMP-0008', startDate: 'Feb 1, 2019', location: 'New York, NY', email: 'john.wu@acme.com' },
+            6: { name: 'Lisa Park', initials: 'LP', title: 'Controller', dept: 'Finance', reports: 8, totalOrg: 32, empId: 'EMP-0089', startDate: 'Jan 10, 2021', location: 'New York, NY', email: 'lisa.park@acme.com' },
+            7: { name: 'Sarah Johnson', initials: 'SJ', title: 'VP of Sales', dept: 'Sales', reports: 6, totalOrg: 156, empId: 'EMP-0015', startDate: 'Apr 15, 2019', location: 'Chicago, IL', email: 'sarah.johnson@acme.com' },
+            8: { name: 'Mike Garcia', initials: 'MG', title: 'Sales Director, West', dept: 'Sales', reports: 12, totalOrg: 78, empId: 'EMP-0112', startDate: 'Sep 1, 2020', location: 'Los Angeles, CA', email: 'mike.garcia@acme.com' },
+            9: { name: 'Emily Torres', initials: 'ET', title: 'Sales Director, East', dept: 'Sales', reports: 10, totalOrg: 64, empId: 'EMP-0118', startDate: 'Oct 15, 2020', location: 'New York, NY', email: 'emily.torres@acme.com' },
+            10: { name: 'Karen Nguyen', initials: 'KN', title: 'Chief People Officer', dept: 'People', reports: 5, totalOrg: 45, empId: 'EMP-0022', startDate: 'Jun 1, 2019', location: 'San Francisco, CA', email: 'karen.nguyen@acme.com' },
+        };
+        
+        // Panel elements
+        const panelOverlay = document.getElementById('panelOverlay');
+        const detailPanel = document.getElementById('detailPanel');
+        const panelClose = document.getElementById('panelClose');
+        
+        // Open panel with employee data
+        function openPanel(id) {
+            const emp = employees[id];
+            if (!emp) return;
+            
+            document.getElementById('panelAvatar').textContent = emp.initials;
+            document.getElementById('panelName').textContent = emp.name;
+            document.getElementById('panelRole').textContent = emp.title;
+            document.getElementById('panelDept').textContent = emp.dept;
+            document.getElementById('panelReports').textContent = emp.reports;
+            document.getElementById('panelTotalOrg').textContent = emp.totalOrg;
+            document.getElementById('panelEmpId').textContent = emp.empId;
+            document.getElementById('panelStartDate').textContent = emp.startDate;
+            document.getElementById('panelLocation').textContent = emp.location;
+            document.getElementById('panelEmail').textContent = emp.email;
+            
+            panelOverlay.classList.add('active');
+            detailPanel.classList.add('active');
+            
+            // Update selected node
+            document.querySelectorAll('.node').forEach(n => n.classList.remove('selected'));
+            document.querySelector(`.node[data-id="${id}"]`)?.classList.add('selected');
+        }
+        
+        function closePanel() {
+            panelOverlay.classList.remove('active');
+            detailPanel.classList.remove('active');
+        }
+        
+        // Node click handlers
+        document.querySelectorAll('.node').forEach(node => {
+            node.addEventListener('click', () => {
+                const id = node.dataset.id;
+                openPanel(id);
+            });
+        });
+        
+        panelClose.addEventListener('click', closePanel);
+        panelOverlay.addEventListener('click', closePanel);
+        
+        // Zoom functionality
+        let zoomLevel = 100;
+        const orgChart = document.getElementById('orgChart');
+        const zoomLevelDisplay = document.getElementById('zoomLevel');
+        
+        function updateZoom() {
+            orgChart.style.transform = `scale(${zoomLevel / 100})`;
+            zoomLevelDisplay.textContent = `${zoomLevel}%`;
+        }
+        
+        document.getElementById('zoomIn').addEventListener('click', () => {
+            if (zoomLevel < 150) {
+                zoomLevel += 10;
+                updateZoom();
+            }
+        });
+        
+        document.getElementById('zoomOut').addEventListener('click', () => {
+            if (zoomLevel > 50) {
+                zoomLevel -= 10;
+                updateZoom();
+            }
+        });
+        
+        document.getElementById('floatZoomIn').addEventListener('click', () => {
+            if (zoomLevel < 150) {
+                zoomLevel += 10;
+                updateZoom();
+            }
+        });
+        
+        document.getElementById('floatZoomOut').addEventListener('click', () => {
+            if (zoomLevel > 50) {
+                zoomLevel -= 10;
+                updateZoom();
+            }
+        });
+        
+        document.getElementById('fitViewBtn').addEventListener('click', () => {
+            zoomLevel = 100;
+            updateZoom();
+        });
+        
+        document.getElementById('floatFit').addEventListener('click', () => {
+            zoomLevel = 100;
+            updateZoom();
+        });
+        
+        // View toggle
+        document.getElementById('treeViewBtn').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('matrixViewBtn').classList.remove('active');
+        });
+        
+        document.getElementById('matrixViewBtn').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('treeViewBtn').classList.remove('active');
+        });
+        
+        // Fullscreen
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            document.documentElement.requestFullscreen?.();
+        });
+        
+        document.getElementById('floatFullscreen').addEventListener('click', () => {
+            document.documentElement.requestFullscreen?.();
+        });
+        
+        // Open panel for CEO on load
+        setTimeout(() => openPanel(1), 500);
+    </script>
 </body>
 </html>

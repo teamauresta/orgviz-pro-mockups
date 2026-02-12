@@ -6,112 +6,205 @@
     <title>OrgViz Pro — Mockups</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg-primary: #FAFAFA;
+            --bg-card: #FFFFFF;
+            --bg-elevated: #FFFFFF;
+            --bg-sidebar: #111111;
+            --bg-dark: #0A0A0A;
+            --bg-subtle: #F4F4F5;
+            --text-primary: #09090B;
+            --text-secondary: #52525B;
+            --text-tertiary: #A1A1AA;
+            --text-inverse: #FAFAFA;
+            --accent: #0D9488;
+            --accent-hover: #0F766E;
+            --accent-light: #F0FDFA;
+            --accent-muted: #99F6E4;
+            --border: #E4E4E7;
+            --border-hover: #D4D4D8;
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -1px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.06), 0 4px 6px -2px rgba(0,0,0,0.04);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.06), 0 10px 10px -5px rgba(0,0,0,0.03);
+            --shadow-card-hover: 0 12px 24px -4px rgba(0,0,0,0.08), 0 4px 8px -2px rgba(0,0,0,0.04);
+        }
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #FAFAFA;
-            color: #111111;
+            background: var(--bg-dark);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 32px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         .container {
-            max-width: 480px;
+            max-width: 520px;
             width: 100%;
         }
         
         .header {
-            margin-bottom: 32px;
+            margin-bottom: 40px;
+            text-align: center;
+            animation: fadeInUp 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .logo {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
+            gap: 14px;
+            margin-bottom: 16px;
         }
         
         .logo-mark {
-            width: 36px;
-            height: 36px;
-            background: #0D9488;
-            border-radius: 8px;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 16px;
+            letter-spacing: -0.02em;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
         }
         
         h1 {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: 600;
-            color: #111111;
+            letter-spacing: -0.02em;
+            color: var(--text-inverse);
+            line-height: 1.1;
         }
         
         .subtitle {
-            font-size: 14px;
-            color: #555555;
+            font-size: 15px;
+            color: var(--text-tertiary);
+            margin-top: 8px;
         }
         
         .links {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
         
-        a {
+        .link-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 16px;
-            background: #FFFFFF;
-            border: 1px solid #E5E5E5;
-            border-radius: 8px;
-            color: #111111;
+            gap: 16px;
+            padding: 20px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
             text-decoration: none;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
-            transition: all 150ms ease;
+            box-shadow: var(--shadow-sm);
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            animation: fadeInUp 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
         
-        a:hover {
-            border-color: #0D9488;
-            background: #CCFBF1;
+        .link-item:nth-child(1) { animation-delay: 100ms; }
+        .link-item:nth-child(2) { animation-delay: 160ms; }
+        .link-item:nth-child(3) { animation-delay: 220ms; }
+        .link-item:nth-child(4) { animation-delay: 280ms; }
+        .link-item:nth-child(5) { animation-delay: 340ms; }
+        .link-item:nth-child(6) { animation-delay: 400ms; }
+        .link-item:nth-child(7) { animation-delay: 460ms; }
+        
+        .link-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-card-hover);
+        }
+        
+        .link-item:active {
+            transform: translateY(0);
         }
         
         .icon {
-            width: 32px;
-            height: 32px;
-            background: #F5F5F5;
-            border-radius: 6px;
+            width: 40px;
+            height: 40px;
+            background: var(--bg-subtle);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            color: #555555;
+            font-size: 18px;
+            color: var(--text-secondary);
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
         }
         
-        a:hover .icon {
-            background: #0D9488;
+        .link-item:hover .icon {
+            background: var(--accent);
             color: white;
+            transform: scale(1.05);
+        }
+        
+        .link-text {
+            flex: 1;
+        }
+        
+        .link-desc {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-tertiary);
+            margin-top: 2px;
         }
         
         .arrow {
-            margin-left: auto;
-            color: #999999;
-            font-size: 18px;
+            color: var(--text-tertiary);
+            font-size: 20px;
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        a:hover .arrow {
-            color: #0D9488;
+        .link-item:hover .arrow {
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-left: 8px;
         }
     </style>
 </head>
@@ -122,43 +215,109 @@
                 <div class="logo-mark">OV</div>
                 <h1>OrgViz Pro</h1>
             </div>
-            <p class="subtitle">UI Mockups — Workforce Intelligence Platform</p>
+            <p class="subtitle">Premium UI Mockups • Workforce Intelligence Platform</p>
         </div>
         
         <div class="links">
-            <a href="landing.html">
-                <div class="icon">◇</div>
-                Landing Page
+            <a href="landing.html" class="link-item">
+                <div class="icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </div>
+                <div class="link-text">
+                    Landing Page
+                    <div class="link-desc">Marketing website with hero and pricing</div>
+                </div>
                 <span class="arrow">→</span>
             </a>
-            <a href="dashboard.html">
-                <div class="icon">▦</div>
-                Dashboard
+            <a href="dashboard.html" class="link-item">
+                <div class="icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                </div>
+                <div class="link-text">
+                    Dashboard
+                    <div class="link-desc">Overview with stats, activity, and quick actions</div>
+                </div>
                 <span class="arrow">→</span>
             </a>
-            <a href="org-chart.html">
-                <div class="icon">⬡</div>
-                Org Chart
+            <a href="org-chart.html" class="link-item">
+                <div class="icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="5" r="3"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <circle cx="6" cy="17" r="3"></circle>
+                        <circle cx="18" cy="17" r="3"></circle>
+                        <line x1="12" y1="12" x2="6" y2="14"></line>
+                        <line x1="12" y1="12" x2="18" y2="14"></line>
+                    </svg>
+                </div>
+                <div class="link-text">
+                    Org Chart
+                    <div class="link-desc">Interactive organizational hierarchy viewer</div>
+                </div>
                 <span class="arrow">→</span>
             </a>
-            <a href="employee-profile.html">
-                <div class="icon">○</div>
-                Employee Profile
+            <a href="employee-profile.html" class="link-item">
+                <div class="icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <div class="link-text">
+                    Employee Profile
+                    <div class="link-desc">Detailed employee information and skills</div>
+                </div>
                 <span class="arrow">→</span>
             </a>
-            <a href="search.html">
-                <div class="icon">⌕</div>
-                Search & Directory
+            <a href="search.html" class="link-item">
+                <div class="icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <div class="link-text">
+                    Search & Directory
+                    <div class="link-desc">Searchable employee directory with filters</div>
+                </div>
                 <span class="arrow">→</span>
             </a>
-            <a href="workforce-planning.html">
-                <div class="icon">▤</div>
-                Workforce Planning
+            <a href="workforce-planning.html" class="link-item">
+                <div class="icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                </div>
+                <div class="link-text">
+                    Workforce Planning
+                    <div class="link-desc">Scenario modeling and budget analysis</div>
+                </div>
                 <span class="arrow">→</span>
             </a>
-            <a href="analytics.html">
-                <div class="icon">◫</div>
-                Analytics
+            <a href="analytics.html" class="link-item">
+                <div class="icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </div>
+                <div class="link-text">
+                    Analytics
+                    <div class="link-desc">Org health score and workforce metrics</div>
+                </div>
                 <span class="arrow">→</span>
             </a>
         </div>

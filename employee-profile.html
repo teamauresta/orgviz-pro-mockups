@@ -6,36 +6,58 @@
     <title>Rachel Lee | OrgViz Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
-            --bg-main: #FAFAFA;
+            --bg-primary: #FAFAFA;
             --bg-card: #FFFFFF;
-            --bg-sidebar: #18181B;
-            --text-primary: #111111;
-            --text-secondary: #555555;
-            --text-tertiary: #999999;
-            --text-sidebar: #A1A1AA;
+            --bg-sidebar: #111111;
+            --bg-subtle: #F4F4F5;
+            --text-primary: #09090B;
+            --text-secondary: #52525B;
+            --text-tertiary: #A1A1AA;
+            --text-inverse: #FAFAFA;
+            --text-sidebar: #D4D4D8;
+            --text-sidebar-active: #FFFFFF;
             --accent: #0D9488;
             --accent-hover: #0F766E;
-            --accent-light: #CCFBF1;
-            --border: #E5E5E5;
-            --border-dark: #D4D4D4;
+            --accent-light: #F0FDFA;
+            --accent-muted: #99F6E4;
+            --border: #E4E4E7;
+            --border-hover: #D4D4D8;
             --success: #059669;
-            --shadow: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -1px rgba(0,0,0,0.04);
+            --shadow-card-hover: 0 12px 24px -4px rgba(0,0,0,0.08), 0 4px 8px -2px rgba(0,0,0,0.04);
         }
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-main);
+            background: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.5;
+            line-height: 1.6;
             font-size: 14px;
+            -webkit-font-smoothing: antialiased;
         }
         
         .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-in {
+            opacity: 0;
+            animation: fadeInUp 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        .delay-1 { animation-delay: 60ms; }
+        .delay-2 { animation-delay: 120ms; }
+        .delay-3 { animation-delay: 180ms; }
+        .delay-4 { animation-delay: 240ms; }
         
         .app {
             display: flex;
@@ -51,18 +73,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            z-index: 100;
         }
         
         .sidebar-header {
-            padding: 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            width: 100%;
         }
         
         .logo-mark {
-            width: 32px;
-            height: 32px;
-            background: var(--accent);
-            border-radius: 6px;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -70,14 +97,17 @@
             font-weight: 600;
             font-size: 12px;
             text-decoration: none;
+            transition: transform 150ms ease;
         }
+        
+        .logo-mark:hover { transform: scale(1.05); }
         
         .sidebar-nav {
             flex: 1;
-            padding: 12px 8px;
+            padding: 16px 8px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 8px;
         }
         
         .nav-item {
@@ -86,32 +116,70 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
+            border-radius: 12px;
             color: var(--text-sidebar);
             text-decoration: none;
-            font-size: 18px;
             transition: all 150ms ease;
+            position: relative;
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 0;
+            background: var(--accent);
+            border-radius: 0 2px 2px 0;
+            transition: height 150ms ease;
         }
         
         .nav-item:hover {
-            background: rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.06);
             color: white;
         }
         
         .nav-item.active {
-            background: var(--accent);
+            background: rgba(255,255,255,0.08);
             color: white;
         }
         
+        .nav-item.active::before { height: 24px; }
+        
+        .nav-item .tooltip {
+            position: absolute;
+            left: calc(100% + 12px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-sidebar);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 150ms ease;
+            pointer-events: none;
+        }
+        
+        .nav-item:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
         .sidebar-footer {
-            padding: 12px;
-            border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 16px 8px;
+            border-top: 1px solid rgba(255,255,255,0.06);
         }
         
         .user-avatar-small {
-            width: 32px;
-            height: 32px;
-            background: #3F3F46;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3F3F46 0%, #27272A 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -120,6 +188,11 @@
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
+            transition: all 150ms ease;
+        }
+        
+        .user-avatar-small:hover {
+            transform: scale(1.05);
         }
         
         /* Main */
@@ -130,12 +203,15 @@
         
         /* Top Bar */
         .topbar {
-            height: 56px;
+            height: 64px;
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            padding: 0 24px;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
         }
         
         .back-btn {
@@ -144,16 +220,16 @@
             gap: 8px;
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
-            padding: 6px 12px;
-            border-radius: 6px;
+            padding: 8px 14px;
+            border-radius: 8px;
             margin-right: 16px;
             transition: all 150ms ease;
         }
         
         .back-btn:hover {
-            background: var(--bg-main);
+            background: var(--bg-subtle);
             color: var(--text-primary);
         }
         
@@ -161,34 +237,36 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-tertiary);
         }
         
         .breadcrumb a {
             color: var(--accent);
             text-decoration: none;
+            transition: color 150ms ease;
         }
         
         .breadcrumb a:hover {
-            text-decoration: underline;
+            color: var(--accent-hover);
         }
         
         .topbar-spacer { flex: 1; }
         
         .btn {
-            height: 32px;
-            padding: 0 14px;
-            border-radius: 6px;
-            font-size: 13px;
+            height: 36px;
+            padding: 0 16px;
+            border-radius: 8px;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            transition: all 150ms ease;
+            gap: 8px;
+            transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
             border: none;
             text-decoration: none;
+            font-family: inherit;
         }
         
         .btn-primary {
@@ -198,6 +276,7 @@
         
         .btn-primary:hover {
             background: var(--accent-hover);
+            transform: scale(1.02);
         }
         
         .btn-secondary {
@@ -207,7 +286,8 @@
         }
         
         .btn-secondary:hover {
-            background: var(--bg-main);
+            background: var(--bg-subtle);
+            border-color: var(--border-hover);
         }
         
         /* Content */
@@ -220,30 +300,31 @@
         .profile-header {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 16px;
             padding: 32px;
             margin-bottom: 24px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-sm);
         }
         
         .profile-top {
             display: flex;
-            gap: 24px;
-            margin-bottom: 24px;
+            gap: 28px;
+            margin-bottom: 28px;
         }
         
         .profile-avatar {
-            width: 96px;
-            height: 96px;
-            background: #E5E5E5;
+            width: 88px;
+            height: 88px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 32px;
-            font-weight: 500;
-            color: var(--text-secondary);
+            font-weight: 600;
+            color: white;
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
         }
         
         .profile-info {
@@ -251,15 +332,16 @@
         }
         
         .profile-name {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 600;
-            margin-bottom: 4px;
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
         }
         
         .profile-title {
             font-size: 16px;
             color: var(--text-secondary);
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
         
         .profile-dept {
@@ -269,27 +351,31 @@
             font-size: 13px;
             color: var(--accent);
             background: var(--accent-light);
-            padding: 4px 10px;
-            border-radius: 4px;
+            padding: 6px 14px;
+            border-radius: 20px;
             font-weight: 500;
         }
         
         .profile-meta {
             display: flex;
-            gap: 32px;
-            padding-top: 20px;
+            gap: 40px;
+            padding-top: 24px;
             border-top: 1px solid var(--border);
+            flex-wrap: wrap;
         }
         
         .meta-item {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 4px;
         }
         
         .meta-label {
             font-size: 12px;
+            font-weight: 500;
             color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
         }
         
         .meta-value {
@@ -301,41 +387,46 @@
         .reporting-chain {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px 24px;
+            border-radius: 16px;
+            padding: 24px;
             margin-bottom: 24px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-sm);
         }
         
         .chain-label {
             font-size: 12px;
+            font-weight: 600;
             color: var(--text-tertiary);
-            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
         }
         
         .chain-path {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             flex-wrap: wrap;
         }
         
         .chain-node {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            background: var(--bg-main);
-            border-radius: 6px;
+            gap: 10px;
+            padding: 10px 16px;
+            background: var(--bg-subtle);
+            border-radius: 12px;
             text-decoration: none;
             color: var(--text-primary);
-            font-size: 13px;
-            transition: all 150ms ease;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .chain-node:hover {
             background: var(--accent-light);
             color: var(--accent);
+            transform: translateY(-2px);
         }
         
         .chain-node.current {
@@ -344,15 +435,15 @@
         }
         
         .chain-avatar {
-            width: 24px;
-            height: 24px;
-            background: #E5E5E5;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--border) 0%, var(--bg-subtle) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 9px;
-            font-weight: 500;
+            font-size: 10px;
+            font-weight: 600;
             color: var(--text-secondary);
         }
         
@@ -363,7 +454,7 @@
         
         .chain-separator {
             color: var(--text-tertiary);
-            font-size: 14px;
+            font-size: 18px;
         }
         
         /* Grid */
@@ -377,45 +468,74 @@
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-card-hover);
         }
         
         .card-header {
-            padding: 16px 20px;
+            padding: 20px 24px;
             border-bottom: 1px solid var(--border);
         }
         
         .card-title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
         }
         
         .card-body {
-            padding: 20px;
+            padding: 24px;
         }
         
         /* Skills */
         .skills-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
         }
         
         .skill-tag {
-            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
             font-weight: 500;
-            padding: 6px 12px;
-            border-radius: 16px;
-            background: var(--bg-main);
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: var(--bg-subtle);
             color: var(--text-secondary);
-            border: 1px solid var(--border);
+            transition: all 150ms ease;
+            cursor: default;
+        }
+        
+        .skill-tag:hover {
+            transform: scale(1.02);
         }
         
         .skill-tag.primary {
             background: var(--accent-light);
             color: var(--accent);
-            border-color: transparent;
+        }
+        
+        .skill-dots {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .skill-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+        
+        .skill-dot.filled {
+            background: currentColor;
         }
         
         /* Team */
@@ -426,26 +546,43 @@
         .team-member {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px 0;
+            gap: 14px;
+            padding: 14px 0;
             border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 150ms ease;
+            margin: 0 -12px;
+            padding-left: 12px;
+            padding-right: 12px;
+            border-radius: 10px;
         }
         
         .team-member:last-child {
             border-bottom: none;
         }
         
+        .team-member:hover {
+            background: var(--bg-subtle);
+        }
+        
         .member-avatar {
-            width: 36px;
-            height: 36px;
-            background: #E5E5E5;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-muted) 0%, var(--accent-light) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-hover);
+            flex-shrink: 0;
+            transition: all 200ms ease;
+        }
+        
+        .team-member:hover .member-avatar {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
         }
         
         .member-info {
@@ -453,26 +590,29 @@
         }
         
         .member-name {
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 14px;
+            font-weight: 600;
         }
         
         .member-title {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-tertiary);
         }
         
         .member-link {
             color: var(--accent);
             font-size: 13px;
+            font-weight: 500;
             text-decoration: none;
+            opacity: 0;
+            transition: opacity 150ms ease;
         }
         
-        .member-link:hover {
-            text-decoration: underline;
+        .team-member:hover .member-link {
+            opacity: 1;
         }
         
-        /* Contact Info */
+        /* Contact */
         .contact-list {
             list-style: none;
         }
@@ -480,25 +620,45 @@
         .contact-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px 0;
+            gap: 14px;
+            padding: 14px 0;
             border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 150ms ease;
+            margin: 0 -12px;
+            padding-left: 12px;
+            padding-right: 12px;
+            border-radius: 10px;
+            position: relative;
         }
         
         .contact-item:last-child {
             border-bottom: none;
         }
         
+        .contact-item:hover {
+            background: var(--bg-subtle);
+        }
+        
         .contact-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--bg-main);
-            border-radius: 6px;
+            width: 36px;
+            height: 36px;
+            background: var(--bg-subtle);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
             color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+        
+        .contact-item:hover .contact-icon {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+        
+        .contact-info {
+            flex: 1;
         }
         
         .contact-label {
@@ -507,7 +667,8 @@
         }
         
         .contact-value {
-            font-size: 13px;
+            font-size: 14px;
+            font-weight: 500;
             color: var(--text-primary);
         }
         
@@ -520,45 +681,137 @@
             text-decoration: underline;
         }
         
+        .copy-hint {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            background: var(--bg-subtle);
+            padding: 4px 8px;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 150ms ease;
+        }
+        
+        .contact-item:hover .copy-hint {
+            opacity: 1;
+        }
+        
         /* Projects */
         .project-list {
             list-style: none;
         }
         
         .project-item {
-            padding: 12px 0;
+            padding: 16px 0;
             border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 150ms ease;
+            margin: 0 -12px;
+            padding-left: 12px;
+            padding-right: 12px;
+            border-radius: 10px;
         }
         
         .project-item:last-child {
             border-bottom: none;
         }
         
-        .project-name {
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 4px;
+        .project-item:hover {
+            background: var(--bg-subtle);
         }
         
-        .project-role {
-            font-size: 12px;
-            color: var(--text-tertiary);
+        .project-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        
+        .project-name {
+            font-size: 14px;
+            font-weight: 600;
         }
         
         .project-status {
             display: inline-block;
             font-size: 11px;
             font-weight: 500;
-            padding: 2px 8px;
-            border-radius: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
             background: var(--accent-light);
             color: var(--accent);
-            margin-top: 6px;
         }
         
         .project-status.complete {
             background: #D1FAE5;
             color: var(--success);
+        }
+        
+        .project-role {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+        
+        /* Activity Timeline */
+        .timeline {
+            list-style: none;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px 0;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 36px;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+        
+        .timeline-item:last-child::before {
+            display: none;
+        }
+        
+        .timeline-dot {
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .timeline-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .timeline-date {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+        
+        @media (max-width: 1024px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; }
+            .profile-top { flex-direction: column; align-items: center; text-align: center; }
+            .profile-meta { justify-content: center; }
         }
     </style>
 </head>
@@ -570,11 +823,26 @@
                 <a href="index.html" class="logo-mark">OV</a>
             </div>
             <nav class="sidebar-nav">
-                <a href="dashboard.html" class="nav-item">▦</a>
-                <a href="org-chart.html" class="nav-item">⬡</a>
-                <a href="search.html" class="nav-item active">⌕</a>
-                <a href="workforce-planning.html" class="nav-item">▤</a>
-                <a href="analytics.html" class="nav-item">◫</a>
+                <a href="dashboard.html" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    <span class="tooltip">Dashboard</span>
+                </a>
+                <a href="org-chart.html" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"></circle><line x1="12" y1="8" x2="12" y2="12"></line><circle cx="6" cy="17" r="3"></circle><circle cx="18" cy="17" r="3"></circle></svg>
+                    <span class="tooltip">Org Chart</span>
+                </a>
+                <a href="search.html" class="nav-item active">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <span class="tooltip">Directory</span>
+                </a>
+                <a href="workforce-planning.html" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    <span class="tooltip">Workforce</span>
+                </a>
+                <a href="analytics.html" class="nav-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span class="tooltip">Analytics</span>
+                </a>
             </nav>
             <div class="sidebar-footer">
                 <div class="user-avatar-small">JD</div>
@@ -584,7 +852,10 @@
         <!-- Main -->
         <main class="main">
             <div class="topbar">
-                <a href="search.html" class="back-btn">← Back</a>
+                <a href="search.html" class="back-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    Back
+                </a>
                 <div class="breadcrumb">
                     <a href="search.html">Directory</a>
                     <span>/</span>
@@ -593,19 +864,28 @@
                     <span>Rachel Lee</span>
                 </div>
                 <div class="topbar-spacer"></div>
-                <button class="btn btn-secondary" style="margin-right:8px;">Message</button>
-                <button class="btn btn-primary">Edit Profile</button>
+                <button class="btn btn-secondary" style="margin-right:12px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    Message
+                </button>
+                <button class="btn btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    Edit Profile
+                </button>
             </div>
             
             <div class="content">
                 <!-- Profile Header -->
-                <div class="profile-header">
+                <div class="profile-header animate-in">
                     <div class="profile-top">
                         <div class="profile-avatar">RL</div>
                         <div class="profile-info">
                             <h1 class="profile-name">Rachel Lee</h1>
                             <p class="profile-title">VP of Engineering</p>
-                            <span class="profile-dept">Engineering</span>
+                            <span class="profile-dept">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"></circle><line x1="12" y1="8" x2="12" y2="12"></line><circle cx="6" cy="17" r="3"></circle><circle cx="18" cy="17" r="3"></circle></svg>
+                                Engineering
+                            </span>
                         </div>
                     </div>
                     <div class="profile-meta">
@@ -633,7 +913,7 @@
                 </div>
                 
                 <!-- Reporting Chain -->
-                <div class="reporting-chain">
+                <div class="reporting-chain animate-in delay-1">
                     <div class="chain-label">Reporting Chain</div>
                     <div class="chain-path">
                         <a href="#" class="chain-node">
@@ -656,17 +936,62 @@
                 <!-- Grid -->
                 <div class="profile-grid">
                     <!-- Skills -->
-                    <div class="card">
+                    <div class="card animate-in delay-2">
                         <div class="card-header">
                             <h3 class="card-title">Skills & Expertise</h3>
                         </div>
                         <div class="card-body">
                             <div class="skills-list">
-                                <span class="skill-tag primary">Engineering Leadership</span>
-                                <span class="skill-tag primary">System Architecture</span>
-                                <span class="skill-tag primary">Team Building</span>
-                                <span class="skill-tag">Python</span>
-                                <span class="skill-tag">Go</span>
+                                <span class="skill-tag primary">
+                                    Engineering Leadership
+                                    <span class="skill-dots">
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                    </span>
+                                </span>
+                                <span class="skill-tag primary">
+                                    System Architecture
+                                    <span class="skill-dots">
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                    </span>
+                                </span>
+                                <span class="skill-tag primary">
+                                    Team Building
+                                    <span class="skill-dots">
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot"></span>
+                                    </span>
+                                </span>
+                                <span class="skill-tag">
+                                    Python
+                                    <span class="skill-dots">
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot"></span>
+                                    </span>
+                                </span>
+                                <span class="skill-tag">
+                                    Go
+                                    <span class="skill-dots">
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot filled"></span>
+                                        <span class="skill-dot"></span>
+                                        <span class="skill-dot"></span>
+                                    </span>
+                                </span>
                                 <span class="skill-tag">Kubernetes</span>
                                 <span class="skill-tag">AWS</span>
                                 <span class="skill-tag">Technical Strategy</span>
@@ -676,41 +1001,50 @@
                     </div>
                     
                     <!-- Contact -->
-                    <div class="card">
+                    <div class="card animate-in delay-2">
                         <div class="card-header">
                             <h3 class="card-title">Contact Information</h3>
                         </div>
                         <div class="card-body">
                             <ul class="contact-list">
                                 <li class="contact-item">
-                                    <div class="contact-icon">✉</div>
-                                    <div>
+                                    <div class="contact-icon">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                    </div>
+                                    <div class="contact-info">
                                         <div class="contact-label">Email</div>
                                         <div class="contact-value"><a href="mailto:rachel.lee@acme.com">rachel.lee@acme.com</a></div>
                                     </div>
+                                    <span class="copy-hint">Click to copy</span>
                                 </li>
                                 <li class="contact-item">
-                                    <div class="contact-icon">☎</div>
-                                    <div>
+                                    <div class="contact-icon">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                    </div>
+                                    <div class="contact-info">
                                         <div class="contact-label">Phone</div>
                                         <div class="contact-value">+1 (415) 555-0142</div>
                                     </div>
+                                    <span class="copy-hint">Click to copy</span>
                                 </li>
                                 <li class="contact-item">
-                                    <div class="contact-icon">💬</div>
-                                    <div>
+                                    <div class="contact-icon">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                                    </div>
+                                    <div class="contact-info">
                                         <div class="contact-label">Slack</div>
                                         <div class="contact-value"><a href="#">@rachel.lee</a></div>
                                     </div>
+                                    <span class="copy-hint">Click to copy</span>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     
                     <!-- Direct Reports -->
-                    <div class="card">
+                    <div class="card animate-in delay-3">
                         <div class="card-header">
-                            <h3 class="card-title">Direct Reports (8)</h3>
+                            <h3 class="card-title">Direct Reports <span style="color:var(--text-tertiary);font-weight:400;">(8)</span></h3>
                         </div>
                         <div class="card-body">
                             <ul class="team-list">
@@ -720,7 +1054,7 @@
                                         <div class="member-name">James Hong</div>
                                         <div class="member-title">Engineering Manager</div>
                                     </div>
-                                    <a href="#" class="member-link">View</a>
+                                    <a href="#" class="member-link">View →</a>
                                 </li>
                                 <li class="team-member">
                                     <div class="member-avatar">AP</div>
@@ -728,7 +1062,7 @@
                                         <div class="member-name">Anna Petrov</div>
                                         <div class="member-title">Engineering Manager</div>
                                     </div>
-                                    <a href="#" class="member-link">View</a>
+                                    <a href="#" class="member-link">View →</a>
                                 </li>
                                 <li class="team-member">
                                     <div class="member-avatar">TC</div>
@@ -736,7 +1070,7 @@
                                         <div class="member-name">Tom Chen</div>
                                         <div class="member-title">Staff Engineer</div>
                                     </div>
-                                    <a href="#" class="member-link">View</a>
+                                    <a href="#" class="member-link">View →</a>
                                 </li>
                                 <li class="team-member">
                                     <div class="member-avatar">SW</div>
@@ -744,33 +1078,78 @@
                                         <div class="member-name">Sophie Wang</div>
                                         <div class="member-title">Principal Engineer</div>
                                     </div>
-                                    <a href="#" class="member-link">View</a>
+                                    <a href="#" class="member-link">View →</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     
                     <!-- Projects -->
-                    <div class="card">
+                    <div class="card animate-in delay-3">
                         <div class="card-header">
                             <h3 class="card-title">Current Projects</h3>
                         </div>
                         <div class="card-body">
                             <ul class="project-list">
                                 <li class="project-item">
-                                    <div class="project-name">Platform Migration v2</div>
+                                    <div class="project-header">
+                                        <div class="project-name">Platform Migration v2</div>
+                                        <span class="project-status">In Progress</span>
+                                    </div>
                                     <div class="project-role">Executive Sponsor</div>
-                                    <span class="project-status">In Progress</span>
                                 </li>
                                 <li class="project-item">
-                                    <div class="project-name">API Gateway Redesign</div>
+                                    <div class="project-header">
+                                        <div class="project-name">API Gateway Redesign</div>
+                                        <span class="project-status">In Progress</span>
+                                    </div>
                                     <div class="project-role">Technical Lead</div>
-                                    <span class="project-status">In Progress</span>
                                 </li>
                                 <li class="project-item">
-                                    <div class="project-name">DevOps Automation</div>
+                                    <div class="project-header">
+                                        <div class="project-name">DevOps Automation</div>
+                                        <span class="project-status complete">Complete</span>
+                                    </div>
                                     <div class="project-role">Sponsor</div>
-                                    <span class="project-status complete">Complete</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Activity Timeline (Full Width) -->
+                    <div class="card animate-in delay-4" style="grid-column: span 2;">
+                        <div class="card-header">
+                            <h3 class="card-title">Activity Timeline</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="timeline">
+                                <li class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">Promoted to VP Engineering</div>
+                                        <div class="timeline-date">January 15, 2024</div>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">Completed AWS Solutions Architect certification</div>
+                                        <div class="timeline-date">November 8, 2023</div>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">Led Platform Migration v1 project launch</div>
+                                        <div class="timeline-date">August 22, 2023</div>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">Promoted to Senior Director of Engineering</div>
+                                        <div class="timeline-date">March 15, 2022</div>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
@@ -779,5 +1158,18 @@
             </div>
         </main>
     </div>
+    
+    <script>
+        // Copy to clipboard functionality
+        document.querySelectorAll('.contact-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const value = this.querySelector('.contact-value').textContent;
+                navigator.clipboard.writeText(value);
+                const hint = this.querySelector('.copy-hint');
+                hint.textContent = 'Copied!';
+                setTimeout(() => hint.textContent = 'Click to copy', 1500);
+            });
+        });
+    </script>
 </body>
 </html>

@@ -6,35 +6,56 @@
     <title>Directory | OrgViz Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
-            --bg-main: #FAFAFA;
+            --bg-primary: #FAFAFA;
             --bg-card: #FFFFFF;
-            --bg-sidebar: #18181B;
-            --text-primary: #111111;
-            --text-secondary: #555555;
-            --text-tertiary: #999999;
-            --text-sidebar: #A1A1AA;
+            --bg-sidebar: #111111;
+            --bg-subtle: #F4F4F5;
+            --text-primary: #09090B;
+            --text-secondary: #52525B;
+            --text-tertiary: #A1A1AA;
+            --text-sidebar: #D4D4D8;
+            --text-sidebar-active: #FFFFFF;
             --accent: #0D9488;
             --accent-hover: #0F766E;
-            --accent-light: #CCFBF1;
-            --border: #E5E5E5;
-            --border-dark: #D4D4D4;
-            --shadow: 0 1px 3px rgba(0,0,0,0.06);
+            --accent-light: #F0FDFA;
+            --accent-muted: #99F6E4;
+            --border: #E4E4E7;
+            --border-hover: #D4D4D8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -1px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.06), 0 4px 6px -2px rgba(0,0,0,0.04);
+            --shadow-card-hover: 0 12px 24px -4px rgba(0,0,0,0.08), 0 4px 8px -2px rgba(0,0,0,0.04);
         }
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-main);
+            background: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.5;
+            line-height: 1.6;
             font-size: 14px;
+            -webkit-font-smoothing: antialiased;
         }
         
         .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-in {
+            opacity: 0;
+            animation: fadeInUp 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        .delay-1 { animation-delay: 60ms; }
+        .delay-2 { animation-delay: 120ms; }
+        .delay-3 { animation-delay: 180ms; }
         
         .app {
             display: flex;
@@ -43,31 +64,35 @@
         
         /* Sidebar */
         .sidebar {
-            width: 240px;
+            width: 260px;
             background: var(--bg-sidebar);
             position: fixed;
             height: 100vh;
             display: flex;
             flex-direction: column;
+            z-index: 100;
         }
         
         .sidebar-header {
-            padding: 24px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            height: 64px;
+            padding: 0 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
         }
         
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             text-decoration: none;
         }
         
         .logo-mark {
             width: 32px;
             height: 32px;
-            background: var(--accent);
-            border-radius: 6px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -88,106 +113,109 @@
             overflow-y: auto;
         }
         
-        .nav-section {
-            margin-bottom: 24px;
-        }
+        .nav-section { margin-bottom: 24px; }
         
         .nav-label {
             font-size: 11px;
             font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: rgba(255,255,255,0.35);
-            padding: 8px 12px;
+            letter-spacing: 0.05em;
+            color: #71717A;
+            padding: 8px 16px;
+            margin-top: 8px;
         }
         
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            border-radius: 6px;
+            gap: 12px;
+            height: 40px;
+            padding: 0 16px;
+            border-radius: 12px;
             color: var(--text-sidebar);
             text-decoration: none;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
             transition: all 150ms ease;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
+            position: relative;
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 0;
+            background: var(--accent);
+            border-radius: 0 2px 2px 0;
+            transition: height 150ms ease;
         }
         
         .nav-item:hover {
-            background: rgba(255,255,255,0.06);
-            color: white;
+            background: rgba(255,255,255,0.04);
+            color: var(--text-sidebar-active);
         }
         
         .nav-item.active {
-            background: var(--accent);
-            color: white;
+            background: rgba(255,255,255,0.08);
+            color: var(--text-sidebar-active);
         }
         
+        .nav-item.active::before { height: 20px; }
+        
         .nav-icon {
-            width: 18px;
-            text-align: center;
-            font-size: 14px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             opacity: 0.7;
         }
         
-        .nav-item.active .nav-icon {
-            opacity: 1;
-        }
+        .nav-item.active .nav-icon,
+        .nav-item:hover .nav-icon { opacity: 1; }
         
         .sidebar-footer {
             padding: 16px;
-            border-top: 1px solid rgba(255,255,255,0.08);
+            border-top: 1px solid rgba(255,255,255,0.06);
         }
         
         .user-card {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px;
-            border-radius: 6px;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 12px;
             cursor: pointer;
             transition: background 150ms ease;
         }
         
-        .user-card:hover {
-            background: rgba(255,255,255,0.06);
-        }
+        .user-card:hover { background: rgba(255,255,255,0.04); }
         
         .user-avatar {
-            width: 32px;
-            height: 32px;
-            background: #3F3F46;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3F3F46 0%, #27272A 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text-sidebar);
-            font-size: 12px;
-            font-weight: 500;
-        }
-        
-        .user-info {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .user-name {
-            color: white;
             font-size: 13px;
             font-weight: 500;
         }
         
-        .user-role {
-            color: var(--text-sidebar);
-            font-size: 11px;
-        }
+        .user-info { flex: 1; min-width: 0; }
+        .user-name { color: white; font-size: 14px; font-weight: 500; }
+        .user-role { color: var(--text-sidebar); font-size: 12px; }
         
         /* Main */
         .main {
             flex: 1;
-            margin-left: 240px;
+            margin-left: 260px;
         }
         
         /* Top Bar */
@@ -206,6 +234,7 @@
         .topbar-title {
             font-size: 16px;
             font-weight: 600;
+            letter-spacing: -0.01em;
         }
         
         .topbar-spacer { flex: 1; }
@@ -213,16 +242,16 @@
         .btn {
             height: 36px;
             padding: 0 16px;
-            border-radius: 6px;
-            font-size: 13px;
+            border-radius: 8px;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            transition: all 150ms ease;
+            gap: 8px;
+            transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
             border: none;
-            text-decoration: none;
+            font-family: inherit;
         }
         
         .btn-primary {
@@ -232,16 +261,17 @@
         
         .btn-primary:hover {
             background: var(--accent-hover);
+            transform: scale(1.02);
         }
         
         /* Content Layout */
-        .content {
+        .content-layout {
             display: flex;
         }
         
         /* Filter Sidebar */
         .filters {
-            width: 260px;
+            width: 280px;
             background: var(--bg-card);
             border-right: 1px solid var(--border);
             padding: 24px;
@@ -252,53 +282,21 @@
         }
         
         .filter-section {
-            margin-bottom: 24px;
+            margin-bottom: 28px;
+        }
+        
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
         }
         
         .filter-title {
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-tertiary);
-            margin-bottom: 12px;
-        }
-        
-        .filter-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 0;
-            cursor: pointer;
-        }
-        
-        .filter-checkbox {
-            width: 16px;
-            height: 16px;
-            border: 1px solid var(--border-dark);
-            border-radius: 4px;
-            background: var(--bg-card);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            color: white;
-            transition: all 150ms ease;
-        }
-        
-        .filter-option.selected .filter-checkbox {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-        
-        .filter-label {
-            flex: 1;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        
-        .filter-count {
-            font-size: 12px;
+            letter-spacing: 0.05em;
             color: var(--text-tertiary);
         }
         
@@ -308,11 +306,80 @@
             background: none;
             border: none;
             cursor: pointer;
-            padding: 0;
+            font-weight: 500;
+            font-family: inherit;
+            transition: color 150ms ease;
         }
         
-        .filter-clear:hover {
-            text-decoration: underline;
+        .filter-clear:hover { color: var(--accent-hover); }
+        
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 150ms ease;
+            margin: 0 -12px;
+        }
+        
+        .filter-option:hover { background: var(--bg-subtle); }
+        
+        .filter-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-hover);
+            border-radius: 5px;
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: transparent;
+            transition: all 150ms ease;
+            flex-shrink: 0;
+        }
+        
+        .filter-option.selected .filter-checkbox {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        
+        .filter-label {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .filter-count {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+        
+        .filter-option.selected .filter-label { color: var(--text-primary); font-weight: 500; }
+        
+        /* Collapsible sections */
+        .filter-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 8px 0;
+        }
+        
+        .filter-toggle-icon {
+            color: var(--text-tertiary);
+            transition: transform 200ms ease;
+        }
+        
+        .filter-section.collapsed .filter-toggle-icon {
+            transform: rotate(-90deg);
+        }
+        
+        .filter-section.collapsed .filter-options {
+            display: none;
         }
         
         /* Results */
@@ -322,10 +389,14 @@
         }
         
         /* Search Bar */
+        .search-container {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        
         .search-bar {
             display: flex;
             gap: 12px;
-            margin-bottom: 24px;
         }
         
         .search-input-wrapper {
@@ -335,57 +406,133 @@
         
         .search-icon {
             position: absolute;
-            left: 16px;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-tertiary);
-            font-size: 16px;
+            pointer-events: none;
         }
         
         .search-input {
             width: 100%;
-            height: 44px;
+            height: 48px;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 0 16px 0 44px;
-            font-size: 14px;
+            border-radius: 24px;
+            padding: 0 20px 0 52px;
+            font-size: 15px;
+            font-family: inherit;
             color: var(--text-primary);
+            outline: none;
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .search-input::placeholder { color: var(--text-tertiary); }
+        
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1), var(--shadow-md);
+        }
+        
+        /* Autocomplete Dropdown */
+        .autocomplete-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+            overflow: hidden;
+        }
+        
+        .search-input:focus + .autocomplete-dropdown,
+        .autocomplete-dropdown:hover {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .autocomplete-section {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .autocomplete-section:last-child { border-bottom: none; }
+        
+        .autocomplete-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+        
+        .autocomplete-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 150ms ease;
+            margin: 0 -12px;
+        }
+        
+        .autocomplete-item:hover { background: var(--bg-subtle); }
+        
+        .autocomplete-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-muted) 0%, var(--accent-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-hover);
+        }
+        
+        .autocomplete-info { flex: 1; }
+        .autocomplete-name { font-size: 14px; font-weight: 500; }
+        .autocomplete-role { font-size: 12px; color: var(--text-tertiary); }
+        
+        .sort-select {
+            height: 48px;
+            padding: 0 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+            cursor: pointer;
             outline: none;
             transition: all 150ms ease;
         }
         
-        .search-input::placeholder {
-            color: var(--text-tertiary);
-        }
-        
-        .search-input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(13,148,136,0.1);
-        }
-        
-        .sort-select {
-            height: 44px;
-            padding: 0 16px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 13px;
-            color: var(--text-primary);
-            cursor: pointer;
-            outline: none;
-        }
+        .sort-select:hover { border-color: var(--border-hover); }
+        .sort-select:focus { border-color: var(--accent); }
         
         /* Results Header */
         .results-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
         
         .results-count {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-secondary);
         }
         
@@ -397,71 +544,78 @@
         .view-toggle {
             display: flex;
             gap: 4px;
+            background: var(--bg-subtle);
+            border-radius: 10px;
+            padding: 4px;
         }
         
         .view-btn {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 6px;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
             color: var(--text-tertiary);
             transition: all 150ms ease;
         }
         
-        .view-btn:hover {
-            background: var(--bg-main);
-            color: var(--text-primary);
-        }
+        .view-btn:hover { color: var(--text-primary); }
         
         .view-btn.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
+            background: var(--bg-card);
+            color: var(--accent);
+            box-shadow: var(--shadow-sm);
         }
         
         /* Result List */
         .result-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
         
         .result-item {
             display: flex;
             align-items: center;
-            gap: 16px;
-            padding: 16px 20px;
+            gap: 20px;
+            padding: 20px 24px;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 16px;
             text-decoration: none;
             color: var(--text-primary);
-            transition: all 150ms ease;
+            box-shadow: var(--shadow-sm);
+            transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .result-item:hover {
             border-color: var(--accent);
-            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-card-hover);
         }
         
         .result-avatar {
-            width: 48px;
-            height: 48px;
-            background: #E5E5E5;
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--accent-muted) 0%, var(--accent-light) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--text-secondary);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent-hover);
             flex-shrink: 0;
+            transition: all 200ms ease;
+        }
+        
+        .result-item:hover .result-avatar {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
         }
         
         .result-info {
@@ -470,20 +624,19 @@
         }
         
         .result-name {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
         
         .result-title {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-secondary);
         }
         
         .result-meta {
             display: flex;
-            gap: 16px;
-            text-align: right;
+            gap: 24px;
         }
         
         .result-meta-item {
@@ -494,50 +647,88 @@
         
         .result-meta-label {
             font-size: 11px;
+            font-weight: 500;
             color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
         }
         
         .result-meta-value {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
+            margin-top: 2px;
         }
         
         .result-dept {
             display: inline-block;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 500;
-            padding: 3px 8px;
-            border-radius: 4px;
+            padding: 4px 12px;
+            border-radius: 20px;
             background: var(--accent-light);
             color: var(--accent);
         }
         
         .result-arrow {
             color: var(--text-tertiary);
-            font-size: 18px;
+            font-size: 20px;
+            transition: all 200ms ease;
         }
         
         .result-item:hover .result-arrow {
             color: var(--accent);
+            transform: translateX(4px);
         }
+        
+        /* Grid View */
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .result-grid .result-item {
+            flex-direction: column;
+            text-align: center;
+            padding: 28px 20px;
+        }
+        
+        .result-grid .result-avatar {
+            width: 64px;
+            height: 64px;
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+        
+        .result-grid .result-meta {
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .result-grid .result-meta-item { min-width: auto; }
+        
+        .result-grid .result-arrow { display: none; }
         
         /* Pagination */
         .pagination {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
             margin-top: 32px;
         }
         
         .page-btn {
-            min-width: 36px;
-            height: 36px;
-            padding: 0 12px;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 14px;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 13px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: inherit;
             color: var(--text-secondary);
             cursor: pointer;
             display: flex;
@@ -547,8 +738,8 @@
         }
         
         .page-btn:hover {
-            background: var(--bg-main);
-            border-color: var(--border-dark);
+            background: var(--bg-subtle);
+            border-color: var(--border-hover);
         }
         
         .page-btn.active {
@@ -558,8 +749,28 @@
         }
         
         .page-btn:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
+        }
+        
+        .page-ellipsis {
+            color: var(--text-tertiary);
+            padding: 0 8px;
+        }
+        
+        @media (max-width: 1200px) {
+            .result-grid { grid-template-columns: repeat(2, 1fr); }
+            .result-meta { gap: 16px; }
+        }
+        
+        @media (max-width: 1024px) {
+            .filters { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; }
+            .result-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -578,15 +789,15 @@
                 <div class="nav-section">
                     <div class="nav-label">Overview</div>
                     <a href="dashboard.html" class="nav-item">
-                        <span class="nav-icon">▦</span>
+                        <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></span>
                         Dashboard
                     </a>
                     <a href="org-chart.html" class="nav-item">
-                        <span class="nav-icon">⬡</span>
+                        <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"></circle><line x1="12" y1="8" x2="12" y2="12"></line><circle cx="6" cy="17" r="3"></circle><circle cx="18" cy="17" r="3"></circle></svg></span>
                         Org Chart
                     </a>
                     <a href="search.html" class="nav-item active">
-                        <span class="nav-icon">⌕</span>
+                        <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
                         Directory
                     </a>
                 </div>
@@ -594,11 +805,11 @@
                 <div class="nav-section">
                     <div class="nav-label">Planning</div>
                     <a href="workforce-planning.html" class="nav-item">
-                        <span class="nav-icon">▤</span>
+                        <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></span>
                         Workforce
                     </a>
                     <a href="analytics.html" class="nav-item">
-                        <span class="nav-icon">◫</span>
+                        <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></span>
                         Analytics
                     </a>
                 </div>
@@ -620,117 +831,172 @@
             <div class="topbar">
                 <h1 class="topbar-title">Employee Directory</h1>
                 <div class="topbar-spacer"></div>
-                <button class="btn btn-primary">+ Add Employee</button>
+                <button class="btn btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Add Employee
+                </button>
             </div>
             
-            <div class="content">
+            <div class="content-layout">
                 <!-- Filters -->
-                <aside class="filters">
+                <aside class="filters animate-in">
                     <div class="filter-section">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                            <span class="filter-title" style="margin:0;">Department</span>
+                        <div class="filter-header">
+                            <span class="filter-title">Department</span>
                             <button class="filter-clear">Clear</button>
                         </div>
-                        <div class="filter-option selected">
-                            <div class="filter-checkbox">✓</div>
-                            <span class="filter-label">Engineering</span>
-                            <span class="filter-count">234</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox"></div>
-                            <span class="filter-label">Sales</span>
-                            <span class="filter-count">156</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox"></div>
-                            <span class="filter-label">Marketing</span>
-                            <span class="filter-count">89</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox"></div>
-                            <span class="filter-label">Product</span>
-                            <span class="filter-count">78</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox"></div>
-                            <span class="filter-label">Operations</span>
-                            <span class="filter-count">64</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox"></div>
-                            <span class="filter-label">Finance</span>
-                            <span class="filter-count">52</span>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-section">
-                        <div class="filter-title">Location</div>
-                        <div class="filter-option selected">
-                            <div class="filter-checkbox">✓</div>
-                            <span class="filter-label">San Francisco</span>
-                            <span class="filter-count">342</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox"></div>
-                            <span class="filter-label">New York</span>
-                            <span class="filter-count">198</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox"></div>
-                            <span class="filter-label">Austin</span>
-                            <span class="filter-count">156</span>
-                        </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox"></div>
-                            <span class="filter-label">Remote</span>
-                            <span class="filter-count">151</span>
+                        <div class="filter-options">
+                            <div class="filter-option selected" onclick="this.classList.toggle('selected')">
+                                <div class="filter-checkbox">✓</div>
+                                <span class="filter-label">Engineering</span>
+                                <span class="filter-count mono">234</span>
+                            </div>
+                            <div class="filter-option" onclick="this.classList.toggle('selected')">
+                                <div class="filter-checkbox">✓</div>
+                                <span class="filter-label">Sales</span>
+                                <span class="filter-count mono">156</span>
+                            </div>
+                            <div class="filter-option" onclick="this.classList.toggle('selected')">
+                                <div class="filter-checkbox">✓</div>
+                                <span class="filter-label">Marketing</span>
+                                <span class="filter-count mono">89</span>
+                            </div>
+                            <div class="filter-option" onclick="this.classList.toggle('selected')">
+                                <div class="filter-checkbox">✓</div>
+                                <span class="filter-label">Product</span>
+                                <span class="filter-count mono">78</span>
+                            </div>
+                            <div class="filter-option" onclick="this.classList.toggle('selected')">
+                                <div class="filter-checkbox">✓</div>
+                                <span class="filter-label">Operations</span>
+                                <span class="filter-count mono">64</span>
+                            </div>
+                            <div class="filter-option" onclick="this.classList.toggle('selected')">
+                                <div class="filter-checkbox">✓</div>
+                                <span class="filter-label">Finance</span>
+                                <span class="filter-count mono">52</span>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="filter-section">
-                        <div class="filter-title">Employment Type</div>
-                        <div class="filter-option selected">
-                            <div class="filter-checkbox">✓</div>
-                            <span class="filter-label">Full-time</span>
-                            <span class="filter-count">792</span>
+                        <div class="filter-header">
+                            <span class="filter-title">Location</span>
                         </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox"></div>
-                            <span class="filter-label">Part-time</span>
-                            <span class="filter-count">34</span>
+                        <div class="filter-options">
+                            <div class="filter-option selected" onclick="this.classList.toggle('selected')">
+                                <div class="filter-checkbox">✓</div>
+                                <span class="filter-label">San Francisco</span>
+                                <span class="filter-count mono">342</span>
+                            </div>
+                            <div class="filter-option" onclick="this.classList.toggle('selected')">
+                                <div class="filter-checkbox">✓</div>
+                                <span class="filter-label">New York</span>
+                                <span class="filter-count mono">198</span>
+                            </div>
+                            <div class="filter-option" onclick="this.classList.toggle('selected')">
+                                <div class="filter-checkbox">✓</div>
+                                <span class="filter-label">Austin</span>
+                                <span class="filter-count mono">156</span>
+                            </div>
+                            <div class="filter-option" onclick="this.classList.toggle('selected')">
+                                <div class="filter-checkbox">✓</div>
+                                <span class="filter-label">Remote</span>
+                                <span class="filter-count mono">151</span>
+                            </div>
                         </div>
-                        <div class="filter-option">
-                            <div class="filter-checkbox"></div>
-                            <span class="filter-label">Contractor</span>
-                            <span class="filter-count">21</span>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <div class="filter-header">
+                            <span class="filter-title">Employment Type</span>
+                        </div>
+                        <div class="filter-options">
+                            <div class="filter-option selected" onclick="this.classList.toggle('selected')">
+                                <div class="filter-checkbox">✓</div>
+                                <span class="filter-label">Full-time</span>
+                                <span class="filter-count mono">792</span>
+                            </div>
+                            <div class="filter-option" onclick="this.classList.toggle('selected')">
+                                <div class="filter-checkbox">✓</div>
+                                <span class="filter-label">Part-time</span>
+                                <span class="filter-count mono">34</span>
+                            </div>
+                            <div class="filter-option" onclick="this.classList.toggle('selected')">
+                                <div class="filter-checkbox">✓</div>
+                                <span class="filter-label">Contractor</span>
+                                <span class="filter-count mono">21</span>
+                            </div>
                         </div>
                     </div>
                 </aside>
                 
                 <!-- Results -->
                 <div class="results">
-                    <div class="search-bar">
-                        <div class="search-input-wrapper">
-                            <span class="search-icon">⌕</span>
-                            <input type="search" class="search-input" placeholder="Search by name, title, skills, or email...">
+                    <div class="search-container animate-in delay-1">
+                        <div class="search-bar">
+                            <div class="search-input-wrapper">
+                                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <input type="search" class="search-input" placeholder="Search by name, title, skills, or email..." id="searchInput">
+                                <div class="autocomplete-dropdown">
+                                    <div class="autocomplete-section">
+                                        <div class="autocomplete-label">Recent</div>
+                                        <div class="autocomplete-item">
+                                            <div class="autocomplete-avatar">RL</div>
+                                            <div class="autocomplete-info">
+                                                <div class="autocomplete-name">Rachel Lee</div>
+                                                <div class="autocomplete-role">VP Engineering</div>
+                                            </div>
+                                        </div>
+                                        <div class="autocomplete-item">
+                                            <div class="autocomplete-avatar">TC</div>
+                                            <div class="autocomplete-info">
+                                                <div class="autocomplete-name">Tom Chen</div>
+                                                <div class="autocomplete-role">Staff Engineer</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="autocomplete-section">
+                                        <div class="autocomplete-label">Suggested</div>
+                                        <div class="autocomplete-item">
+                                            <div class="autocomplete-avatar">SJ</div>
+                                            <div class="autocomplete-info">
+                                                <div class="autocomplete-name">Sarah Johnson</div>
+                                                <div class="autocomplete-role">VP of Sales</div>
+                                            </div>
+                                        </div>
+                                        <div class="autocomplete-item">
+                                            <div class="autocomplete-avatar">MB</div>
+                                            <div class="autocomplete-info">
+                                                <div class="autocomplete-name">Maria Bell</div>
+                                                <div class="autocomplete-role">CTO</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <select class="sort-select">
+                                <option>Sort: Name (A-Z)</option>
+                                <option>Sort: Name (Z-A)</option>
+                                <option>Sort: Start Date</option>
+                                <option>Sort: Department</option>
+                            </select>
                         </div>
-                        <select class="sort-select">
-                            <option>Sort: Name (A-Z)</option>
-                            <option>Sort: Name (Z-A)</option>
-                            <option>Sort: Start Date</option>
-                            <option>Sort: Department</option>
-                        </select>
                     </div>
                     
-                    <div class="results-header">
-                        <span class="results-count">Showing <strong>1-20</strong> of <strong>234</strong> employees</span>
+                    <div class="results-header animate-in delay-2">
+                        <span class="results-count">Showing <strong>1–20</strong> of <strong>234</strong> employees</span>
                         <div class="view-toggle">
-                            <button class="view-btn active">≡</button>
-                            <button class="view-btn">⊞</button>
+                            <button class="view-btn active" id="listViewBtn" title="List view">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                            </button>
+                            <button class="view-btn" id="gridViewBtn" title="Grid view">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                            </button>
                         </div>
                     </div>
                     
-                    <div class="result-list">
+                    <div class="result-list animate-in delay-3" id="resultContainer">
                         <a href="employee-profile.html" class="result-item">
                             <div class="result-avatar">RL</div>
                             <div class="result-info">
@@ -866,19 +1132,52 @@
                     </div>
                     
                     <div class="pagination">
-                        <button class="page-btn" disabled>←</button>
+                        <button class="page-btn" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
                         <button class="page-btn active">1</button>
                         <button class="page-btn">2</button>
                         <button class="page-btn">3</button>
                         <button class="page-btn">4</button>
                         <button class="page-btn">5</button>
-                        <span style="color:var(--text-tertiary);padding:0 8px;">...</span>
+                        <span class="page-ellipsis">...</span>
                         <button class="page-btn">12</button>
-                        <button class="page-btn">→</button>
+                        <button class="page-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
                     </div>
                 </div>
             </div>
         </main>
     </div>
+    
+    <script>
+        // View toggle
+        const listViewBtn = document.getElementById('listViewBtn');
+        const gridViewBtn = document.getElementById('gridViewBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        
+        listViewBtn.addEventListener('click', () => {
+            listViewBtn.classList.add('active');
+            gridViewBtn.classList.remove('active');
+            resultContainer.className = 'result-list animate-in delay-3';
+        });
+        
+        gridViewBtn.addEventListener('click', () => {
+            gridViewBtn.classList.add('active');
+            listViewBtn.classList.remove('active');
+            resultContainer.className = 'result-grid animate-in delay-3';
+        });
+        
+        // Pagination
+        document.querySelectorAll('.page-btn:not(:disabled)').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                if (!this.querySelector('svg')) {
+                    this.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
