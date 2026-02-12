@@ -258,6 +258,10 @@
         
         .tab.active::after { transform: scaleX(1); }
         
+        /* Tab content */
+        .tab-content { display: none; opacity: 0; transition: opacity 200ms ease; }
+        .tab-content.active { display: block; opacity: 1; }
+
         /* Scenario Header */
         .scenario-header {
             display: flex;
@@ -515,6 +519,249 @@
         }
         
         .impact-actions { display: flex; gap: 12px; }
+
+        /* Headcount Plan inputs */
+        .hc-input {
+            width: 80px;
+            height: 36px;
+            padding: 0 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            text-align: center;
+            transition: border-color 150ms ease;
+            background: var(--bg-card);
+        }
+        .hc-input:focus { border-color: var(--accent); outline: none; }
+
+        .hc-select {
+            height: 36px;
+            padding: 0 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            background: var(--bg-card);
+            cursor: pointer;
+        }
+        .hc-select:focus { border-color: var(--accent); outline: none; }
+
+        .totals-row td { font-weight: 600; background: var(--bg-subtle); border-bottom: none !important; }
+
+        /* Budget bar charts */
+        .bar-chart { padding: 24px; }
+        .bar-row { margin-bottom: 16px; }
+        .bar-label { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
+        .bar-label-name { font-weight: 500; }
+        .bar-label-value { color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+        .bar-track { height: 28px; background: var(--bg-subtle); border-radius: 6px; position: relative; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 6px; transition: width 400ms ease; position: absolute; top: 0; left: 0; }
+        .bar-fill.current { background: var(--accent); z-index: 2; }
+        .bar-fill.planned { background: var(--accent-muted); z-index: 1; }
+        .bar-tooltip {
+            display: none;
+            position: absolute;
+            top: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 10;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .bar-track:hover .bar-tooltip { display: block; }
+
+        .stacked-bar { display: flex; height: 32px; border-radius: 8px; overflow: hidden; }
+        .stacked-segment { height: 100%; position: relative; cursor: default; transition: opacity 150ms; }
+        .stacked-segment:hover { opacity: 0.85; }
+        .stacked-segment .stacked-tip {
+            display: none;
+            position: absolute;
+            top: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+        .stacked-segment:hover .stacked-tip { display: block; }
+
+        .cost-legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
+        .cost-legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); }
+        .cost-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+        /* Timeline / Gantt */
+        .gantt { padding: 24px; overflow-x: auto; }
+        .gantt-table { width: 100%; min-width: 600px; border-collapse: collapse; }
+        .gantt-table th { text-align: center; padding: 10px 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); border-bottom: 1px solid var(--border); }
+        .gantt-table th:first-child { text-align: left; width: 140px; }
+        .gantt-table td { padding: 12px 0; border-bottom: 1px solid var(--border); position: relative; height: 48px; }
+        .gantt-table td:first-child { font-weight: 500; font-size: 14px; padding-left: 4px; }
+        .gantt-table tbody tr:last-child td { border-bottom: none; }
+        .gantt-bar {
+            position: absolute;
+            top: 10px;
+            height: 28px;
+            border-radius: 6px;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            padding: 0 8px;
+        }
+        .milestone-row td { border-bottom: none !important; }
+        .milestone-marker {
+            position: absolute;
+            top: 6px;
+            width: 2px;
+            height: 32px;
+            background: var(--warning);
+        }
+        .milestone-label {
+            position: absolute;
+            top: -2px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--warning);
+            white-space: nowrap;
+            transform: translateX(-50%);
+        }
+
+        .key-dates { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+        .key-date-item { padding: 16px; background: var(--bg-subtle); border-radius: 10px; }
+        .key-date-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 4px; }
+        .key-date-value { font-size: 14px; font-weight: 600; }
+        .key-date-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+        /* What-If Panel */
+        .whatif-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 200;
+            transition: opacity 200ms ease;
+            opacity: 0;
+        }
+        .whatif-backdrop.open { display: block; opacity: 1; }
+
+        .whatif-panel {
+            position: fixed;
+            top: 0;
+            right: -380px;
+            width: 360px;
+            height: 100vh;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            z-index: 210;
+            transition: right 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -8px 0 24px rgba(0,0,0,0.08);
+        }
+        .whatif-panel.open { right: 0; }
+
+        .whatif-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .whatif-title { font-size: 16px; font-weight: 600; }
+        .whatif-close {
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            border: none; background: none; cursor: pointer; border-radius: 8px;
+            color: var(--text-secondary); transition: all 150ms;
+        }
+        .whatif-close:hover { background: var(--bg-subtle); color: var(--text-primary); }
+
+        .whatif-body { flex: 1; overflow-y: auto; padding: 24px; }
+        .whatif-group { margin-bottom: 20px; }
+        .whatif-label { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .whatif-val { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 600; }
+
+        .whatif-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border);
+            outline: none;
+        }
+        .whatif-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+        }
+
+        .whatif-input {
+            width: 100%;
+            height: 40px;
+            padding: 0 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+        .whatif-input:focus { border-color: var(--accent); outline: none; }
+
+        .whatif-select {
+            width: 100%;
+            height: 40px;
+            padding: 0 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            background: var(--bg-card);
+            cursor: pointer;
+        }
+        .whatif-select:focus { border-color: var(--accent); outline: none; }
+
+        .whatif-preview {
+            background: var(--bg-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 8px;
+        }
+        .whatif-preview-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 12px; }
+        .whatif-preview-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+        .whatif-preview-row:last-child { border-bottom: none; }
+        .whatif-preview-label { font-size: 13px; color: var(--text-secondary); }
+        .whatif-preview-value { font-size: 14px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+
+        .whatif-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+        }
+        .whatif-footer .btn { flex: 1; justify-content: center; }
+
+        /* Burn rate table */
+        .burn-table { width: 100%; border-collapse: collapse; }
+        .burn-table th { text-align: left; padding: 10px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); background: var(--bg-subtle); border-bottom: 1px solid var(--border); }
+        .burn-table td { padding: 10px 16px; font-size: 13px; border-bottom: 1px solid var(--border); }
+        .burn-table tbody tr:last-child td { border-bottom: none; }
         
         @media (max-width: 1200px) {
             .summary-grid { grid-template-columns: repeat(2, 1fr); }
@@ -588,7 +835,7 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                     Export
                 </button>
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" id="newScenarioBtn">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     New Scenario
                 </button>
@@ -597,244 +844,739 @@
             <div class="content">
                 <!-- Tabs -->
                 <div class="tabs animate-in">
-                    <button class="tab active" onclick="this.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Scenarios</button>
-                    <button class="tab" onclick="this.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Headcount Plan</button>
-                    <button class="tab" onclick="this.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Budget Analysis</button>
-                    <button class="tab" onclick="this.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Timeline</button>
+                    <button class="tab active" data-tab="scenarios">Scenarios</button>
+                    <button class="tab" data-tab="headcount">Headcount Plan</button>
+                    <button class="tab" data-tab="budget">Budget Analysis</button>
+                    <button class="tab" data-tab="timeline">Timeline</button>
                 </div>
                 
-                <!-- Scenario Header -->
-                <div class="scenario-header animate-in delay-1">
-                    <select class="scenario-select">
-                        <option>Q1 2025 Expansion Plan</option>
-                        <option>Q2 2025 Consolidation</option>
-                        <option>2025 Baseline</option>
-                    </select>
-                    <span class="scenario-badge draft">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        Draft
-                    </span>
-                    <span class="scenario-meta">Last updated 2 hours ago by Jane Doe</span>
-                </div>
-                
-                <!-- Summary Cards -->
-                <div class="summary-grid animate-in delay-1">
-                    <div class="summary-card">
-                        <div class="summary-label">Planned Headcount</div>
-                        <div class="summary-value mono">912</div>
-                        <span class="summary-change positive">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
-                            +65 from current
+                <!-- ============ TAB 1: SCENARIOS ============ -->
+                <div class="tab-content active" id="tab-scenarios">
+                    <!-- Scenario Header -->
+                    <div class="scenario-header animate-in delay-1">
+                        <select class="scenario-select" id="scenarioDropdown">
+                            <option value="q1">Q1 2025 Expansion Plan</option>
+                            <option value="q2">Q2 2025 Consolidation</option>
+                            <option value="baseline">2025 Baseline</option>
+                        </select>
+                        <span class="scenario-badge draft" id="scenarioBadge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <span id="badgeText">Draft</span>
                         </span>
+                        <span class="scenario-meta">Last updated 2 hours ago by Jane Doe</span>
                     </div>
-                    <div class="summary-card">
-                        <div class="summary-label">Annual Budget</div>
-                        <div class="summary-value mono">$24.8M</div>
-                        <span class="summary-change negative">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
-                            +$2.1M (8.4%)
-                        </span>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-label">Open Positions</div>
-                        <div class="summary-value mono">38</div>
-                        <span class="summary-change" style="color:var(--text-secondary)">23 approved, 15 pending</span>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-label">Cost per Employee</div>
-                        <div class="summary-value mono">$27.2K</div>
-                        <span class="summary-change positive">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                            −2.3% avg
-                        </span>
-                    </div>
-                </div>
-                
-                <!-- Department Table -->
-                <div class="card animate-in delay-2">
-                    <div class="card-header">
-                        <h3 class="card-title">Department Breakdown</h3>
-                        <button class="btn btn-secondary" style="height:32px;padding:0 14px;font-size:13px;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                            Add Department
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Department</th>
-                                    <th>Current</th>
-                                    <th>Planned</th>
-                                    <th>Change</th>
-                                    <th class="budget-cell">Current Budget</th>
-                                    <th class="budget-cell">Planned Budget</th>
-                                    <th class="budget-cell">Variance</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="dept-name">Engineering</td>
-                                    <td class="mono">234</td>
-                                    <td class="mono">278</td>
-                                    <td class="change-positive mono">+44</td>
-                                    <td class="budget-cell mono">$8.2M</td>
-                                    <td class="budget-cell mono">$9.7M</td>
-                                    <td class="budget-cell change-negative mono">+$1.5M</td>
-                                    <td><button class="action-btn">Edit</button></td>
-                                </tr>
-                                <tr>
-                                    <td class="dept-name">Sales</td>
-                                    <td class="mono">156</td>
-                                    <td class="mono">168</td>
-                                    <td class="change-positive mono">+12</td>
-                                    <td class="budget-cell mono">$4.8M</td>
-                                    <td class="budget-cell mono">$5.2M</td>
-                                    <td class="budget-cell change-negative mono">+$0.4M</td>
-                                    <td><button class="action-btn">Edit</button></td>
-                                </tr>
-                                <tr>
-                                    <td class="dept-name">Marketing</td>
-                                    <td class="mono">89</td>
-                                    <td class="mono">95</td>
-                                    <td class="change-positive mono">+6</td>
-                                    <td class="budget-cell mono">$2.4M</td>
-                                    <td class="budget-cell mono">$2.6M</td>
-                                    <td class="budget-cell change-negative mono">+$0.2M</td>
-                                    <td><button class="action-btn">Edit</button></td>
-                                </tr>
-                                <tr>
-                                    <td class="dept-name">Product</td>
-                                    <td class="mono">78</td>
-                                    <td class="mono">82</td>
-                                    <td class="change-positive mono">+4</td>
-                                    <td class="budget-cell mono">$2.8M</td>
-                                    <td class="budget-cell mono">$2.9M</td>
-                                    <td class="budget-cell change-negative mono">+$0.1M</td>
-                                    <td><button class="action-btn">Edit</button></td>
-                                </tr>
-                                <tr>
-                                    <td class="dept-name">Operations</td>
-                                    <td class="mono">64</td>
-                                    <td class="mono">64</td>
-                                    <td class="change-neutral mono">—</td>
-                                    <td class="budget-cell mono">$1.6M</td>
-                                    <td class="budget-cell mono">$1.6M</td>
-                                    <td class="budget-cell change-neutral mono">—</td>
-                                    <td><button class="action-btn">Edit</button></td>
-                                </tr>
-                                <tr>
-                                    <td class="dept-name">Finance</td>
-                                    <td class="mono">52</td>
-                                    <td class="mono">52</td>
-                                    <td class="change-neutral mono">—</td>
-                                    <td class="budget-cell mono">$1.4M</td>
-                                    <td class="budget-cell mono">$1.4M</td>
-                                    <td class="budget-cell change-neutral mono">—</td>
-                                    <td><button class="action-btn">Edit</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <!-- Comparison -->
-                <div class="comparison-grid animate-in delay-3">
-                    <div class="comparison-card">
-                        <div class="comparison-header">
-                            <span class="comparison-title">Current State</span>
-                            <span class="comparison-badge current">Live</span>
+                    
+                    <!-- Summary Cards -->
+                    <div class="summary-grid animate-in delay-1">
+                        <div class="summary-card">
+                            <div class="summary-label">Planned Headcount</div>
+                            <div class="summary-value mono" id="s-headcount">912</div>
+                            <span class="summary-change positive" id="s-hc-change">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                +65 from current
+                            </span>
                         </div>
-                        <div class="comparison-body">
-                            <div class="comparison-row">
-                                <span class="comparison-label">Total Headcount</span>
-                                <span class="comparison-value mono">847</span>
+                        <div class="summary-card">
+                            <div class="summary-label">Annual Budget</div>
+                            <div class="summary-value mono" id="s-budget">$24.8M</div>
+                            <span class="summary-change negative" id="s-budget-change">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                +$2.1M (8.4%)
+                            </span>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Open Positions</div>
+                            <div class="summary-value mono" id="s-positions">38</div>
+                            <span class="summary-change" style="color:var(--text-secondary)" id="s-pos-detail">23 approved, 15 pending</span>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Cost per Employee</div>
+                            <div class="summary-value mono" id="s-cpe">$27.2K</div>
+                            <span class="summary-change positive" id="s-cpe-change">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                −2.3% avg
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Department Table -->
+                    <div class="card animate-in delay-2">
+                        <div class="card-header">
+                            <h3 class="card-title">Department Breakdown</h3>
+                            <button class="btn btn-secondary" style="height:32px;padding:0 14px;font-size:13px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                Add Department
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <table class="table" id="scenarioTable">
+                                <thead>
+                                    <tr>
+                                        <th>Department</th>
+                                        <th>Current</th>
+                                        <th>Planned</th>
+                                        <th>Change</th>
+                                        <th class="budget-cell">Current Budget</th>
+                                        <th class="budget-cell">Planned Budget</th>
+                                        <th class="budget-cell">Variance</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="scenarioTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Comparison -->
+                    <div class="comparison-grid animate-in delay-3">
+                        <div class="comparison-card">
+                            <div class="comparison-header">
+                                <span class="comparison-title">Current State</span>
+                                <span class="comparison-badge current">Live</span>
                             </div>
-                            <div class="comparison-row">
-                                <span class="comparison-label">Total Budget</span>
-                                <span class="comparison-value mono">$22.7M</span>
+                            <div class="comparison-body">
+                                <div class="comparison-row"><span class="comparison-label">Total Headcount</span><span class="comparison-value mono">847</span></div>
+                                <div class="comparison-row"><span class="comparison-label">Total Budget</span><span class="comparison-value mono">$22.7M</span></div>
+                                <div class="comparison-row"><span class="comparison-label">Departments</span><span class="comparison-value mono">12</span></div>
+                                <div class="comparison-row"><span class="comparison-label">Avg Span of Control</span><span class="comparison-value mono">6.2</span></div>
+                                <div class="comparison-row"><span class="comparison-label">Org Depth</span><span class="comparison-value mono">7 levels</span></div>
                             </div>
-                            <div class="comparison-row">
-                                <span class="comparison-label">Departments</span>
-                                <span class="comparison-value mono">12</span>
+                        </div>
+                        
+                        <div class="comparison-card">
+                            <div class="comparison-header">
+                                <span class="comparison-title" id="comp-plan-title">Q1 2025 Expansion Plan</span>
+                                <span class="comparison-badge draft">Draft</span>
                             </div>
-                            <div class="comparison-row">
-                                <span class="comparison-label">Avg Span of Control</span>
-                                <span class="comparison-value mono">6.2</span>
-                            </div>
-                            <div class="comparison-row">
-                                <span class="comparison-label">Org Depth</span>
-                                <span class="comparison-value mono">7 levels</span>
+                            <div class="comparison-body" id="comp-plan-body">
                             </div>
                         </div>
                     </div>
                     
-                    <div class="comparison-card">
-                        <div class="comparison-header">
-                            <span class="comparison-title">Q1 2025 Expansion Plan</span>
-                            <span class="comparison-badge draft">Draft</span>
+                    <!-- Impact Panel -->
+                    <div class="impact-panel animate-in delay-4">
+                        <div class="impact-info">
+                            <div class="impact-item">
+                                <h4>Headcount Delta</h4>
+                                <p class="mono" style="color:var(--success)" id="impact-hc">+65 employees</p>
+                            </div>
+                            <div class="impact-item">
+                                <h4>Budget Impact</h4>
+                                <p class="mono" style="color:var(--warning)" id="impact-budget">+$2.1M (+9.2%)</p>
+                            </div>
+                            <div class="impact-item">
+                                <h4>Timeline</h4>
+                                <p id="impact-timeline">Q1–Q2 2025</p>
+                            </div>
                         </div>
-                        <div class="comparison-body">
-                            <div class="comparison-row">
-                                <span class="comparison-label">Total Headcount</span>
-                                <span class="comparison-value">
-                                    <span class="mono">912</span>
-                                    <span class="comparison-delta positive">+65</span>
-                                </span>
-                            </div>
-                            <div class="comparison-row">
-                                <span class="comparison-label">Total Budget</span>
-                                <span class="comparison-value">
-                                    <span class="mono">$24.8M</span>
-                                    <span class="comparison-delta negative">+$2.1M</span>
-                                </span>
-                            </div>
-                            <div class="comparison-row">
-                                <span class="comparison-label">Departments</span>
-                                <span class="comparison-value">
-                                    <span class="mono">13</span>
-                                    <span class="comparison-delta positive">+1</span>
-                                </span>
-                            </div>
-                            <div class="comparison-row">
-                                <span class="comparison-label">Avg Span of Control</span>
-                                <span class="comparison-value mono">6.4</span>
-                            </div>
-                            <div class="comparison-row">
-                                <span class="comparison-label">Org Depth</span>
-                                <span class="comparison-value mono">7 levels</span>
-                            </div>
+                        <div class="impact-actions">
+                            <button class="btn btn-ghost">Discard Changes</button>
+                            <button class="btn btn-primary">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Apply Scenario
+                            </button>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Impact Panel -->
-                <div class="impact-panel animate-in delay-4">
-                    <div class="impact-info">
-                        <div class="impact-item">
-                            <h4>Headcount Delta</h4>
-                            <p class="mono" style="color:var(--success)">+65 employees</p>
+
+                <!-- ============ TAB 2: HEADCOUNT PLAN ============ -->
+                <div class="tab-content" id="tab-headcount">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Headcount Planning</h3>
+                            <button class="btn btn-secondary" style="height:32px;padding:0 14px;font-size:13px;" id="addRoleBtn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                Add Role
+                            </button>
                         </div>
-                        <div class="impact-item">
-                            <h4>Budget Impact</h4>
-                            <p class="mono" style="color:var(--warning)">+$2.1M (+9.2%)</p>
-                        </div>
-                        <div class="impact-item">
-                            <h4>Timeline</h4>
-                            <p>Q1–Q2 2025</p>
+                        <div class="card-body">
+                            <table class="table" id="headcountTable">
+                                <thead>
+                                    <tr>
+                                        <th>Department</th>
+                                        <th>Current HC</th>
+                                        <th>Planned HC</th>
+                                        <th>Net Change</th>
+                                        <th>Start Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hcBody"></tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="impact-actions">
-                        <button class="btn btn-ghost">Discard Changes</button>
-                        <button class="btn btn-primary">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            Apply Scenario
-                        </button>
+                </div>
+
+                <!-- ============ TAB 3: BUDGET ANALYSIS ============ -->
+                <div class="tab-content" id="tab-budget">
+                    <!-- Budget Summary Cards -->
+                    <div class="summary-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 28px;">
+                        <div class="summary-card">
+                            <div class="summary-label">Total Budget</div>
+                            <div class="summary-value mono">$24.8M</div>
+                            <span class="summary-change negative">Fiscal Year 2025</span>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Budget Utilized</div>
+                            <div class="summary-value mono">68%</div>
+                            <span class="summary-change" style="color:var(--text-secondary)">$16.9M allocated</span>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label">Remaining</div>
+                            <div class="summary-value mono" style="color:var(--success)">$7.9M</div>
+                            <span class="summary-change positive">Available for allocation</span>
+                        </div>
+                    </div>
+
+                    <!-- Department Budget Chart -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Department Budget — Current vs Planned</h3>
+                        </div>
+                        <div class="card-body bar-chart" id="budgetBarChart"></div>
+                    </div>
+
+                    <!-- Cost Breakdown -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Cost Breakdown</h3>
+                        </div>
+                        <div class="card-body" style="padding: 24px;">
+                            <div class="stacked-bar" id="costStackedBar"></div>
+                            <div class="cost-legend" id="costLegend"></div>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Burn Rate -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Monthly Burn Rate</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="burn-table">
+                                <thead>
+                                    <tr><th>Month</th><th>Headcount</th><th>Payroll</th><th>Benefits</th><th>Other</th><th style="text-align:right">Total</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Jan 2025</td><td class="mono">847</td><td class="mono">$1.28M</td><td class="mono">$0.37M</td><td class="mono">$0.18M</td><td class="mono" style="text-align:right;font-weight:600">$1.83M</td></tr>
+                                    <tr><td>Feb 2025</td><td class="mono">858</td><td class="mono">$1.31M</td><td class="mono">$0.38M</td><td class="mono">$0.18M</td><td class="mono" style="text-align:right;font-weight:600">$1.87M</td></tr>
+                                    <tr><td>Mar 2025</td><td class="mono">878</td><td class="mono">$1.36M</td><td class="mono">$0.39M</td><td class="mono">$0.19M</td><td class="mono" style="text-align:right;font-weight:600">$1.94M</td></tr>
+                                    <tr><td>Apr 2025</td><td class="mono">896</td><td class="mono">$1.40M</td><td class="mono">$0.40M</td><td class="mono">$0.19M</td><td class="mono" style="text-align:right;font-weight:600">$1.99M</td></tr>
+                                    <tr><td>May 2025</td><td class="mono">910</td><td class="mono">$1.43M</td><td class="mono">$0.41M</td><td class="mono">$0.20M</td><td class="mono" style="text-align:right;font-weight:600">$2.04M</td></tr>
+                                    <tr><td>Jun 2025</td><td class="mono">912</td><td class="mono">$1.44M</td><td class="mono">$0.41M</td><td class="mono">$0.20M</td><td class="mono" style="text-align:right;font-weight:600">$2.05M</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ TAB 4: TIMELINE ============ -->
+                <div class="tab-content" id="tab-timeline">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Hiring Roadmap — H1 2025</h3>
+                        </div>
+                        <div class="card-body gantt">
+                            <table class="gantt-table">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:left">Department</th>
+                                        <th>Jan</th>
+                                        <th>Feb</th>
+                                        <th>Mar</th>
+                                        <th>Apr</th>
+                                        <th>May</th>
+                                        <th>Jun</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ganttBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Key Dates -->
+                    <div class="key-dates">
+                        <div class="key-date-item">
+                            <div class="key-date-label">Q1 Review</div>
+                            <div class="key-date-value">March 15, 2025</div>
+                            <div class="key-date-desc">Review hiring progress & adjust targets</div>
+                        </div>
+                        <div class="key-date-item">
+                            <div class="key-date-label">Board Approval</div>
+                            <div class="key-date-value">April 1, 2025</div>
+                            <div class="key-date-desc">Final budget sign-off for Q2 hires</div>
+                        </div>
+                        <div class="key-date-item">
+                            <div class="key-date-label">Q2 Kickoff</div>
+                            <div class="key-date-value">May 1, 2025</div>
+                            <div class="key-date-desc">Onboarding wave begins for new hires</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
+
+    <!-- What-If Panel -->
+    <div class="whatif-backdrop" id="whatifBackdrop"></div>
+    <div class="whatif-panel" id="whatifPanel">
+        <div class="whatif-header">
+            <span class="whatif-title">What-If Scenario Builder</span>
+            <button class="whatif-close" id="whatifClose">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="whatif-body">
+            <div class="whatif-group">
+                <div class="whatif-label">Increase Engineering by <span class="whatif-val" id="wiEngVal">0</span></div>
+                <input type="range" class="whatif-slider" id="wiEng" min="0" max="50" value="0">
+            </div>
+            <div class="whatif-group">
+                <div class="whatif-label">Reduce Marketing by <span class="whatif-val" id="wiMktVal">0</span></div>
+                <input type="range" class="whatif-slider" id="wiMkt" min="0" max="20" value="0">
+            </div>
+            <div class="whatif-group">
+                <div class="whatif-label">New Department Size</div>
+                <input type="number" class="whatif-input" id="wiNewDept" min="0" value="0" placeholder="0">
+            </div>
+            <div class="whatif-group">
+                <div class="whatif-label">Average Salary Adjustment</div>
+                <select class="whatif-select" id="wiSalary">
+                    <option value="-10">-10%</option>
+                    <option value="-5">-5%</option>
+                    <option value="0" selected>0%</option>
+                    <option value="5">+5%</option>
+                    <option value="10">+10%</option>
+                    <option value="15">+15%</option>
+                </select>
+            </div>
+            <div class="whatif-group">
+                <div class="whatif-label">Hiring Timeline</div>
+                <select class="whatif-select" id="wiTimeline">
+                    <option value="3">Aggressive (3mo)</option>
+                    <option value="6" selected>Standard (6mo)</option>
+                    <option value="9">Conservative (9mo)</option>
+                </select>
+            </div>
+
+            <div class="whatif-preview">
+                <div class="whatif-preview-title">Live Preview</div>
+                <div class="whatif-preview-row">
+                    <span class="whatif-preview-label">New Total Headcount</span>
+                    <span class="whatif-preview-value" id="wiPreviewHC">912</span>
+                </div>
+                <div class="whatif-preview-row">
+                    <span class="whatif-preview-label">Budget Impact</span>
+                    <span class="whatif-preview-value" id="wiPreviewBudget">+$0.0M</span>
+                </div>
+                <div class="whatif-preview-row">
+                    <span class="whatif-preview-label">Cost per Employee</span>
+                    <span class="whatif-preview-value" id="wiPreviewCPE">$27.2K</span>
+                </div>
+            </div>
+        </div>
+        <div class="whatif-footer">
+            <button class="btn btn-ghost" id="wiReset">Reset</button>
+            <button class="btn btn-primary" id="wiApply">Apply to Plan</button>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        // ==================== DATA ====================
+        const scenarios = {
+            q1: {
+                name: 'Q1 2025 Expansion Plan',
+                badge: 'Draft',
+                headcount: 912,
+                hcDelta: 65,
+                budget: 24.8,
+                budgetDelta: 2.1,
+                budgetPct: 8.4,
+                positions: 38,
+                posDetail: '23 approved, 15 pending',
+                cpe: 27.2,
+                cpePct: -2.3,
+                depts: 13,
+                span: 6.4,
+                depth: '7 levels',
+                timeline: 'Q1–Q2 2025',
+                rows: [
+                    { name:'Engineering', cur:234, plan:278, curB:'$8.2M', planB:'$9.7M', varB:'+$1.5M' },
+                    { name:'Sales', cur:156, plan:168, curB:'$4.8M', planB:'$5.2M', varB:'+$0.4M' },
+                    { name:'Marketing', cur:89, plan:95, curB:'$2.4M', planB:'$2.6M', varB:'+$0.2M' },
+                    { name:'Product', cur:78, plan:82, curB:'$2.8M', planB:'$2.9M', varB:'+$0.1M' },
+                    { name:'Operations', cur:64, plan:64, curB:'$1.6M', planB:'$1.6M', varB:'—' },
+                    { name:'Finance', cur:52, plan:52, curB:'$1.4M', planB:'$1.4M', varB:'—' },
+                ]
+            },
+            q2: {
+                name: 'Q2 2025 Consolidation',
+                badge: 'Draft',
+                headcount: 810,
+                hcDelta: -37,
+                budget: 21.2,
+                budgetDelta: -1.5,
+                budgetPct: -6.6,
+                positions: 12,
+                posDetail: '8 approved, 4 pending',
+                cpe: 26.2,
+                cpePct: -5.9,
+                depts: 12,
+                span: 5.8,
+                depth: '7 levels',
+                timeline: 'Q2–Q3 2025',
+                rows: [
+                    { name:'Engineering', cur:234, plan:220, curB:'$8.2M', planB:'$7.6M', varB:'-$0.6M' },
+                    { name:'Sales', cur:156, plan:148, curB:'$4.8M', planB:'$4.5M', varB:'-$0.3M' },
+                    { name:'Marketing', cur:89, plan:80, curB:'$2.4M', planB:'$2.1M', varB:'-$0.3M' },
+                    { name:'Product', cur:78, plan:76, curB:'$2.8M', planB:'$2.7M', varB:'-$0.1M' },
+                    { name:'Operations', cur:64, plan:60, curB:'$1.6M', planB:'$1.5M', varB:'-$0.1M' },
+                    { name:'Finance', cur:52, plan:50, curB:'$1.4M', planB:'$1.3M', varB:'-$0.1M' },
+                ]
+            },
+            baseline: {
+                name: '2025 Baseline',
+                badge: 'Active',
+                headcount: 847,
+                hcDelta: 0,
+                budget: 22.7,
+                budgetDelta: 0,
+                budgetPct: 0,
+                positions: 0,
+                posDetail: 'No open positions',
+                cpe: 26.8,
+                cpePct: 0,
+                depts: 12,
+                span: 6.2,
+                depth: '7 levels',
+                timeline: 'N/A',
+                rows: [
+                    { name:'Engineering', cur:234, plan:234, curB:'$8.2M', planB:'$8.2M', varB:'—' },
+                    { name:'Sales', cur:156, plan:156, curB:'$4.8M', planB:'$4.8M', varB:'—' },
+                    { name:'Marketing', cur:89, plan:89, curB:'$2.4M', planB:'$2.4M', varB:'—' },
+                    { name:'Product', cur:78, plan:78, curB:'$2.8M', planB:'$2.8M', varB:'—' },
+                    { name:'Operations', cur:64, plan:64, curB:'$1.6M', planB:'$1.6M', varB:'—' },
+                    { name:'Finance', cur:52, plan:52, curB:'$1.4M', planB:'$1.4M', varB:'—' },
+                ]
+            }
+        };
+
+        const upArrow = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>';
+        const downArrow = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+
+        // ==================== TABS ====================
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const target = tab.dataset.tab;
+                tabContents.forEach(tc => tc.classList.remove('active'));
+                const el = document.getElementById('tab-' + target);
+                el.classList.add('active');
+                // Trigger fade
+                el.style.opacity = '0';
+                requestAnimationFrame(() => { el.style.opacity = '1'; });
+            });
+        });
+
+        // ==================== SCENARIO DROPDOWN ====================
+        function renderScenario(key) {
+            const s = scenarios[key];
+            // Summary cards
+            document.getElementById('s-headcount').textContent = s.headcount.toLocaleString();
+            document.getElementById('s-budget').textContent = '$' + s.budget + 'M';
+            document.getElementById('s-positions').textContent = s.positions;
+            document.getElementById('s-pos-detail').textContent = s.posDetail;
+            document.getElementById('s-cpe').textContent = '$' + s.cpe + 'K';
+
+            const hcSign = s.hcDelta >= 0 ? '+' : '';
+            document.getElementById('s-hc-change').innerHTML = (s.hcDelta > 0 ? upArrow : s.hcDelta < 0 ? downArrow : '') + ' ' + hcSign + s.hcDelta + ' from current';
+            document.getElementById('s-hc-change').className = 'summary-change ' + (s.hcDelta > 0 ? 'positive' : s.hcDelta < 0 ? 'negative' : '');
+
+            const bSign = s.budgetDelta >= 0 ? '+' : '';
+            document.getElementById('s-budget-change').innerHTML = (s.budgetDelta !== 0 ? upArrow : '') + ' ' + bSign + '$' + Math.abs(s.budgetDelta) + 'M (' + bSign + s.budgetPct + '%)';
+            document.getElementById('s-budget-change').className = 'summary-change ' + (s.budgetDelta > 0 ? 'negative' : s.budgetDelta < 0 ? 'positive' : '');
+
+            document.getElementById('s-cpe-change').innerHTML = (s.cpePct !== 0 ? downArrow : '') + ' ' + (s.cpePct > 0 ? '+' : '') + s.cpePct + '% avg';
+            document.getElementById('s-cpe-change').className = 'summary-change ' + (s.cpePct <= 0 ? 'positive' : 'negative');
+
+            // Badge
+            const badge = document.getElementById('scenarioBadge');
+            document.getElementById('badgeText').textContent = s.badge;
+            badge.className = 'scenario-badge ' + (s.badge === 'Active' ? 'active' : 'draft');
+
+            // Table
+            const tbody = document.getElementById('scenarioTableBody');
+            tbody.innerHTML = s.rows.map(r => {
+                const diff = r.plan - r.cur;
+                const cls = diff > 0 ? 'change-positive' : diff < 0 ? 'change-negative' : 'change-neutral';
+                const diffStr = diff > 0 ? '+' + diff : diff < 0 ? '' + diff : '—';
+                const varCls = r.varB === '—' ? 'change-neutral' : r.varB.startsWith('-') ? 'change-positive' : 'change-negative';
+                return `<tr>
+                    <td class="dept-name">${r.name}</td>
+                    <td class="mono">${r.cur}</td>
+                    <td class="mono">${r.plan}</td>
+                    <td class="${cls} mono">${diffStr}</td>
+                    <td class="budget-cell mono">${r.curB}</td>
+                    <td class="budget-cell mono">${r.planB}</td>
+                    <td class="budget-cell ${varCls} mono">${r.varB}</td>
+                    <td><button class="action-btn">Edit</button></td>
+                </tr>`;
+            }).join('');
+
+            // Comparison plan card
+            document.getElementById('comp-plan-title').textContent = s.name;
+            const compBody = document.getElementById('comp-plan-body');
+            const delta = (v, suffix='') => {
+                if (v === 0) return '';
+                const sign = v > 0 ? '+' : '';
+                const cls = v > 0 ? 'positive' : 'negative';
+                return `<span class="comparison-delta ${cls}">${sign}${v}${suffix}</span>`;
+            };
+            compBody.innerHTML = `
+                <div class="comparison-row"><span class="comparison-label">Total Headcount</span><span class="comparison-value"><span class="mono">${s.headcount}</span>${delta(s.hcDelta)}</span></div>
+                <div class="comparison-row"><span class="comparison-label">Total Budget</span><span class="comparison-value"><span class="mono">$${s.budget}M</span>${s.budgetDelta !== 0 ? delta(s.budgetDelta, 'M').replace(/([\+\-])/, '$1$') : ''}</span></div>
+                <div class="comparison-row"><span class="comparison-label">Departments</span><span class="comparison-value"><span class="mono">${s.depts}</span>${delta(s.depts - 12)}</span></div>
+                <div class="comparison-row"><span class="comparison-label">Avg Span of Control</span><span class="comparison-value mono">${s.span}</span></div>
+                <div class="comparison-row"><span class="comparison-label">Org Depth</span><span class="comparison-value mono">${s.depth}</span></div>
+            `;
+
+            // Impact panel
+            const hcImpact = s.hcDelta >= 0 ? '+' + s.hcDelta : '' + s.hcDelta;
+            document.getElementById('impact-hc').textContent = hcImpact + ' employees';
+            document.getElementById('impact-hc').style.color = s.hcDelta >= 0 ? 'var(--success)' : 'var(--warning)';
+            const bImpact = s.budgetDelta >= 0 ? '+$' + s.budgetDelta + 'M' : '-$' + Math.abs(s.budgetDelta) + 'M';
+            document.getElementById('impact-budget').textContent = bImpact + ' (' + (s.budgetPct >= 0 ? '+' : '') + s.budgetPct + '%)';
+            document.getElementById('impact-timeline').textContent = s.timeline;
+        }
+
+        document.getElementById('scenarioDropdown').addEventListener('change', function() {
+            renderScenario(this.value);
+        });
+        renderScenario('q1');
+
+        // ==================== HEADCOUNT PLAN ====================
+        const hcData = [
+            { dept:'Engineering', cur:234, plan:278, date:'2025-02-01', status:'Approved' },
+            { dept:'Sales', cur:156, plan:168, date:'2025-03-01', status:'Approved' },
+            { dept:'Marketing', cur:89, plan:95, date:'2025-03-01', status:'Pending' },
+            { dept:'Product', cur:78, plan:82, date:'2025-04-01', status:'Pending' },
+            { dept:'Operations', cur:64, plan:64, date:'2025-01-01', status:'Approved' },
+            { dept:'Finance', cur:52, plan:52, date:'2025-01-01', status:'Draft' },
+        ];
+
+        function renderHCTable() {
+            const tbody = document.getElementById('hcBody');
+            let totalCur = 0, totalPlan = 0;
+            tbody.innerHTML = hcData.map((r, i) => {
+                totalCur += r.cur;
+                totalPlan += r.plan;
+                const net = r.plan - r.cur;
+                const netCls = net > 0 ? 'change-positive' : net === 0 ? 'change-neutral' : 'change-negative';
+                const netStr = net > 0 ? '+' + net : net === 0 ? '—' : '' + net;
+                return `<tr>
+                    <td class="dept-name">${r.dept}</td>
+                    <td class="mono">${r.cur}</td>
+                    <td><input type="number" class="hc-input" value="${r.plan}" data-idx="${i}" min="0"></td>
+                    <td class="${netCls} mono">${netStr}</td>
+                    <td><input type="date" class="hc-input" value="${r.date}" data-idx="${i}" data-field="date" style="width:140px"></td>
+                    <td><select class="hc-select" data-idx="${i}" data-field="status">
+                        <option ${r.status==='Approved'?'selected':''}>Approved</option>
+                        <option ${r.status==='Pending'?'selected':''}>Pending</option>
+                        <option ${r.status==='Draft'?'selected':''}>Draft</option>
+                    </select></td>
+                </tr>`;
+            }).join('');
+            const totalNet = totalPlan - totalCur;
+            const totalCls = totalNet > 0 ? 'change-positive' : totalNet === 0 ? 'change-neutral' : 'change-negative';
+            const totalStr = totalNet > 0 ? '+' + totalNet : totalNet === 0 ? '—' : '' + totalNet;
+            tbody.innerHTML += `<tr class="totals-row">
+                <td>Total</td>
+                <td class="mono">${totalCur}</td>
+                <td class="mono" style="padding-left:20px">${totalPlan}</td>
+                <td class="${totalCls} mono">${totalStr}</td>
+                <td></td><td></td>
+            </tr>`;
+
+            // Bind inputs
+            tbody.querySelectorAll('input[type="number"]').forEach(inp => {
+                inp.addEventListener('input', function() {
+                    const idx = +this.dataset.idx;
+                    hcData[idx].plan = +this.value || 0;
+                    renderHCTable();
+                });
+            });
+            tbody.querySelectorAll('input[type="date"]').forEach(inp => {
+                inp.addEventListener('change', function() {
+                    hcData[+this.dataset.idx].date = this.value;
+                });
+            });
+            tbody.querySelectorAll('select').forEach(sel => {
+                sel.addEventListener('change', function() {
+                    hcData[+this.dataset.idx].status = this.value;
+                });
+            });
+        }
+        renderHCTable();
+
+        document.getElementById('addRoleBtn').addEventListener('click', () => {
+            hcData.push({ dept:'', cur:0, plan:0, date:'2025-06-01', status:'Draft' });
+            // Make dept editable for new rows
+            renderHCTable();
+            const rows = document.getElementById('hcBody').querySelectorAll('tr');
+            const newRow = rows[rows.length - 2]; // before totals
+            const deptTd = newRow.querySelector('td');
+            deptTd.innerHTML = '<input type="text" class="hc-input" style="width:140px" placeholder="Department" value="">';
+            deptTd.querySelector('input').addEventListener('input', function() {
+                hcData[hcData.length - 1].dept = this.value;
+            });
+        });
+
+        // ==================== BUDGET ANALYSIS ====================
+        const budgetDepts = [
+            { name:'Engineering', cur:8.2, plan:9.7 },
+            { name:'Sales', cur:4.8, plan:5.2 },
+            { name:'Product', cur:2.8, plan:2.9 },
+            { name:'Marketing', cur:2.4, plan:2.6 },
+            { name:'Operations', cur:1.6, plan:1.6 },
+            { name:'Finance', cur:1.4, plan:1.4 },
+        ];
+        const maxBudget = 10;
+
+        const barChart = document.getElementById('budgetBarChart');
+        barChart.innerHTML = budgetDepts.map(d => {
+            const curW = (d.cur / maxBudget * 100).toFixed(1);
+            const planW = (d.plan / maxBudget * 100).toFixed(1);
+            return `<div class="bar-row">
+                <div class="bar-label"><span class="bar-label-name">${d.name}</span><span class="bar-label-value">$${d.cur}M / $${d.plan}M</span></div>
+                <div class="bar-track" style="position:relative">
+                    <div class="bar-fill planned" style="width:${planW}%"></div>
+                    <div class="bar-fill current" style="width:${curW}%"></div>
+                    <span class="bar-tooltip">Current: $${d.cur}M · Planned: $${d.plan}M</span>
+                </div>
+            </div>`;
+        }).join('');
+
+        // Cost breakdown stacked bar
+        const costData = [
+            { label:'Salaries', pct:62, color:'#0D9488' },
+            { label:'Benefits', pct:18, color:'#5EEAD4' },
+            { label:'Equipment', pct:8, color:'#99F6E4' },
+            { label:'Training', pct:7, color:'#A1A1AA' },
+            { label:'Other', pct:5, color:'#D4D4D8' },
+        ];
+        document.getElementById('costStackedBar').innerHTML = costData.map(c =>
+            `<div class="stacked-segment" style="width:${c.pct}%;background:${c.color}"><span class="stacked-tip">${c.label}: ${c.pct}%</span></div>`
+        ).join('');
+        document.getElementById('costLegend').innerHTML = costData.map(c =>
+            `<span class="cost-legend-item"><span class="cost-dot" style="background:${c.color}"></span>${c.label} (${c.pct}%)</span>`
+        ).join('');
+
+        // ==================== TIMELINE / GANTT ====================
+        const ganttData = [
+            { dept:'Engineering', start:1, end:4, hires:44, color:'#0D9488' },
+            { dept:'Sales', start:2, end:3, hires:12, color:'#5EEAD4' },
+            { dept:'Marketing', start:2, end:4, hires:6, color:'#99F6E4' },
+            { dept:'Product', start:3, end:4, hires:4, color:'#A1A1AA' },
+        ];
+        const milestones = [
+            { month:2, label:'Q1 Review' },
+            { month:3, label:'Board Approval' },
+            { month:4, label:'Q2 Kickoff' },
+        ];
+
+        const ganttBody = document.getElementById('ganttBody');
+        // Department rows
+        ganttData.forEach(g => {
+            let cells = `<td>${g.dept}</td>`;
+            for (let m = 0; m < 6; m++) {
+                const isStart = m === g.start;
+                const inRange = m >= g.start && m <= g.end;
+                const span = g.end - g.start + 1;
+                if (isStart) {
+                    const leftPct = 0;
+                    const widthPct = 100;
+                    cells += `<td colspan="${span}" style="position:relative"><span class="gantt-bar" style="left:4%;width:92%;background:${g.color};color:${g.color==='#99F6E4'||g.color==='#5EEAD4'||g.color==='#D4D4D8'?'#09090B':'white'}">${g.hires} hires</span></td>`;
+                } else if (!inRange) {
+                    cells += '<td></td>';
+                }
+            }
+            ganttBody.innerHTML += `<tr>${cells}</tr>`;
+        });
+        // Milestone row
+        let mCells = '<td style="font-size:11px;font-weight:600;color:var(--text-tertiary)">Milestones</td>';
+        for (let m = 0; m < 6; m++) {
+            const ms = milestones.find(x => x.month === m);
+            if (ms) {
+                mCells += `<td style="position:relative"><span class="milestone-marker" style="left:50%"></span><span class="milestone-label" style="left:50%;top:38px">${ms.label}</span></td>`;
+            } else {
+                mCells += '<td></td>';
+            }
+        }
+        ganttBody.innerHTML += `<tr class="milestone-row">${mCells}</tr>`;
+
+        // ==================== WHAT-IF PANEL ====================
+        const panel = document.getElementById('whatifPanel');
+        const backdrop = document.getElementById('whatifBackdrop');
+
+        function openWhatIf() { panel.classList.add('open'); backdrop.classList.add('open'); }
+        function closeWhatIf() { panel.classList.remove('open'); backdrop.classList.remove('open'); }
+
+        document.getElementById('newScenarioBtn').addEventListener('click', openWhatIf);
+        document.getElementById('whatifClose').addEventListener('click', closeWhatIf);
+        backdrop.addEventListener('click', closeWhatIf);
+
+        const wiEng = document.getElementById('wiEng');
+        const wiMkt = document.getElementById('wiMkt');
+        const wiNewDept = document.getElementById('wiNewDept');
+        const wiSalary = document.getElementById('wiSalary');
+
+        function updateWhatIf() {
+            const eng = +wiEng.value;
+            const mkt = +wiMkt.value;
+            const newD = +wiNewDept.value || 0;
+            const salAdj = +wiSalary.value;
+
+            document.getElementById('wiEngVal').textContent = eng;
+            document.getElementById('wiMktVal').textContent = mkt;
+
+            const baseHC = 912;
+            const baseBudget = 24.8;
+            const baseCPE = 27.2;
+
+            const newHC = baseHC + eng - mkt + newD;
+            const salaryMult = 1 + salAdj / 100;
+            const newCPE = baseCPE * salaryMult;
+            const budgetImpact = ((newHC * newCPE) - (baseHC * baseCPE)) / 1000;
+
+            document.getElementById('wiPreviewHC').textContent = newHC.toLocaleString();
+            document.getElementById('wiPreviewBudget').textContent = (budgetImpact >= 0 ? '+' : '') + '$' + budgetImpact.toFixed(1) + 'M';
+            document.getElementById('wiPreviewCPE').textContent = '$' + newCPE.toFixed(1) + 'K';
+        }
+
+        [wiEng, wiMkt, wiNewDept, wiSalary, document.getElementById('wiTimeline')].forEach(el => {
+            el.addEventListener('input', updateWhatIf);
+            el.addEventListener('change', updateWhatIf);
+        });
+
+        document.getElementById('wiReset').addEventListener('click', () => {
+            wiEng.value = 0; wiMkt.value = 0; wiNewDept.value = 0; wiSalary.value = '0';
+            document.getElementById('wiTimeline').value = '6';
+            updateWhatIf();
+        });
+
+        document.getElementById('wiApply').addEventListener('click', () => {
+            closeWhatIf();
+        });
+
+        updateWhatIf();
+    })();
+    </script>
 </body>
 </html>
