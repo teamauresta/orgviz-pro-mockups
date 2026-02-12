@@ -6,1194 +6,856 @@
     <title>Workforce Planning | OrgViz Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         :root {
-            --primary: #1e1b4b;
-            --primary-light: #312e81;
-            --accent: #7c3aed;
-            --accent-light: #a78bfa;
-            --accent-glow: rgba(124, 58, 237, 0.3);
-            --bg-light: #f8fafc;
-            --bg-card: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            --border: #e2e8f0;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
+            --bg-main: #FAFAFA;
+            --bg-card: #FFFFFF;
+            --bg-sidebar: #18181B;
+            --text-primary: #111111;
+            --text-secondary: #555555;
+            --text-tertiary: #999999;
+            --text-sidebar: #A1A1AA;
+            --accent: #0D9488;
+            --accent-hover: #0F766E;
+            --accent-light: #CCFBF1;
+            --border: #E5E5E5;
+            --border-dark: #D4D4D4;
+            --success: #059669;
+            --warning: #D97706;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
-
+        
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-light);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-main);
             color: var(--text-primary);
             line-height: 1.5;
-            min-height: 100vh;
+            font-size: 14px;
         }
-
-        /* Layout */
-        .app-container {
+        
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .app {
             display: flex;
             min-height: 100vh;
         }
-
+        
         /* Sidebar */
         .sidebar {
-            width: 260px;
-            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: white;
-            display: flex;
-            flex-direction: column;
+            width: 240px;
+            background: var(--bg-sidebar);
             position: fixed;
             height: 100vh;
-            z-index: 100;
+            display: flex;
+            flex-direction: column;
         }
-
+        
         .sidebar-header {
             padding: 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
-
+        
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             text-decoration: none;
-            color: white;
         }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-            border-radius: var(--radius-sm);
+        
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 4px 12px var(--accent-glow);
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
         }
-
+        
         .logo-text {
-            font-weight: 700;
-            font-size: 18px;
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
         }
-
+        
         .sidebar-nav {
             flex: 1;
             padding: 16px 12px;
         }
-
+        
         .nav-section {
             margin-bottom: 24px;
         }
-
-        .nav-section-title {
+        
+        .nav-label {
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255,255,255,0.35);
             padding: 8px 12px;
         }
-
+        
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: var(--radius-sm);
-            color: rgba(255, 255, 255, 0.7);
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            color: var(--text-sidebar);
             text-decoration: none;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
-            transition: all 0.2s;
-            margin-bottom: 4px;
+            transition: all 150ms ease;
+            margin-bottom: 2px;
         }
-
+        
         .nav-item:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.06);
             color: white;
         }
-
+        
         .nav-item.active {
-            background: linear-gradient(90deg, var(--accent) 0%, rgba(124, 58, 237, 0.7) 100%);
-            color: white;
-            box-shadow: 0 4px 12px var(--accent-glow);
-        }
-
-        .nav-icon {
-            width: 20px;
-            text-align: center;
-            font-size: 16px;
-        }
-
-        .nav-badge {
-            margin-left: auto;
             background: var(--accent);
             color: white;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 10px;
         }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 260px;
-            min-height: 100vh;
+        
+        .nav-icon {
+            width: 18px;
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
+        .nav-item.active .nav-icon { opacity: 1; }
+        
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        .user-card {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 6px;
         }
-
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #3F3F46;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-sidebar);
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .user-info { flex: 1; }
+        
+        .user-name {
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .user-role {
+            color: var(--text-sidebar);
+            font-size: 11px;
+        }
+        
+        /* Main */
+        .main {
+            flex: 1;
+            margin-left: 240px;
+        }
+        
         /* Top Bar */
         .topbar {
-            height: 72px;
+            height: 64px;
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             padding: 0 32px;
-            gap: 20px;
-            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
         }
-
-        .page-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .scenario-selector {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-left: 24px;
-        }
-
-        .scenario-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .scenario-dropdown {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            background: var(--bg-light);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: all 0.2s;
-            min-width: 240px;
-        }
-
-        .scenario-dropdown:hover {
-            border-color: var(--accent);
-        }
-
-        .scenario-status {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success);
-        }
-
-        .scenario-status.draft {
-            background: var(--warning);
-        }
-
-        .scenario-name {
-            font-size: 14px;
+        
+        .topbar-title {
+            font-size: 16px;
             font-weight: 600;
-            color: var(--text-primary);
-            flex: 1;
         }
-
-        .scenario-chevron {
-            color: var(--text-muted);
-        }
-
-        .topbar-spacer {
-            flex: 1;
-        }
-
-        .topbar-actions {
-            display: flex;
-            gap: 12px;
-        }
-
+        
+        .topbar-spacer { flex: 1; }
+        
         .btn {
-            height: 40px;
-            padding: 0 20px;
-            border-radius: var(--radius-sm);
-            font-size: 14px;
+            height: 36px;
+            padding: 0 16px;
+            border-radius: 6px;
+            font-size: 13px;
             font-weight: 500;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
+            gap: 6px;
+            transition: all 150ms ease;
+            border: none;
+            text-decoration: none;
         }
-
-        .btn-secondary {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
+        
         .btn-primary {
             background: var(--accent);
-            border: none;
             color: white;
         }
-
+        
         .btn-primary:hover {
-            background: var(--primary);
+            background: var(--accent-hover);
         }
-
-        /* Planning Layout */
-        .planning-layout {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
-
-        /* Impact Panel */
-        .impact-panel {
-            width: 320px;
-            background: var(--bg-card);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-        }
-
-        .panel-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .panel-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .panel-subtitle {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .panel-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 24px;
-        }
-
-        /* Impact Cards */
-        .impact-card {
-            background: var(--bg-light);
-            border-radius: var(--radius-md);
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-
-        .impact-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-
-        .impact-card-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .impact-card-badge {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 12px;
-        }
-
-        .impact-card-badge.increase {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
-        .impact-card-badge.decrease {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-
-        .impact-card-badge.neutral {
-            background: rgba(100, 116, 139, 0.1);
-            color: var(--text-secondary);
-        }
-
-        .impact-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .impact-comparison {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-        }
-
-        .impact-current {
-            color: var(--text-muted);
-        }
-
-        .impact-arrow {
-            color: var(--text-muted);
-        }
-
-        .impact-change {
-            font-weight: 600;
-        }
-
-        .impact-change.positive {
-            color: var(--success);
-        }
-
-        .impact-change.negative {
-            color: var(--danger);
-        }
-
-        /* Budget Card */
-        .budget-breakdown {
-            margin-top: 16px;
-        }
-
-        .budget-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 13px;
-        }
-
-        .budget-row:last-child {
-            border-bottom: none;
-            padding-top: 12px;
-            font-weight: 600;
-        }
-
-        .budget-label {
-            color: var(--text-secondary);
-        }
-
-        .budget-value {
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        /* Comparison View */
-        .comparison-view {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
-            overflow: hidden;
-        }
-
-        .comparison-column {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .comparison-column:first-child {
-            border-right: 2px dashed var(--border);
-        }
-
-        .column-header {
-            padding: 16px 24px;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .column-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .column-status {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        .column-status.current {
-            background: var(--text-muted);
-        }
-
-        .column-status.draft {
-            background: var(--warning);
-        }
-
-        .column-name {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .column-meta {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .column-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 24px;
-            background: var(--bg-light);
-        }
-
-        /* Department Cards */
-        .dept-card {
-            background: var(--bg-card);
+        
+        .btn-secondary {
+            background: transparent;
             border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            margin-bottom: 16px;
-            overflow: hidden;
-        }
-
-        .dept-card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
-        }
-
-        .dept-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        .dept-icon.eng {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-        }
-
-        .dept-icon.product {
-            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
-        }
-
-        .dept-icon.sales {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-        }
-
-        .dept-info {
-            flex: 1;
-        }
-
-        .dept-name {
-            font-size: 14px;
-            font-weight: 600;
             color: var(--text-primary);
         }
-
-        .dept-meta {
-            font-size: 12px;
-            color: var(--text-muted);
+        
+        .btn-secondary:hover {
+            background: var(--bg-main);
         }
-
-        .dept-headcount {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        
+        /* Content */
+        .content {
+            padding: 32px;
+            max-width: 1400px;
         }
-
-        .headcount-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .headcount-change {
-            font-size: 12px;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 10px;
-        }
-
-        .headcount-change.up {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-
-        .headcount-change.down {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
-        .dept-expand {
-            color: var(--text-muted);
-            font-size: 16px;
-        }
-
-        .dept-card-body {
-            padding: 16px 20px;
-        }
-
-        /* Employee Rows */
-        .employee-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: var(--radius-sm);
-            transition: background 0.15s;
-            cursor: move;
-        }
-
-        .employee-row:hover {
-            background: var(--bg-light);
-        }
-
-        .employee-row.dragging {
-            opacity: 0.5;
-            background: var(--accent-glow);
-        }
-
-        .drag-handle {
-            color: var(--text-muted);
-            cursor: grab;
-            font-size: 14px;
-        }
-
-        .employee-avatar-sm {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #c7d2fe 0%, #a5b4fc 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .employee-info-sm {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .employee-name-sm {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .employee-title-sm {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .employee-actions {
+        
+        /* Tabs */
+        .tabs {
             display: flex;
             gap: 4px;
-            opacity: 0;
-            transition: opacity 0.15s;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
         }
-
-        .employee-row:hover .employee-actions {
-            opacity: 1;
-        }
-
-        .action-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
+        
+        .tab {
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: none;
             border: none;
-            background: transparent;
-            color: var(--text-muted);
             cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: relative;
+            transition: all 150ms ease;
         }
-
-        .action-icon:hover {
-            background: var(--bg-light);
+        
+        .tab:hover {
             color: var(--text-primary);
         }
-
-        /* Open Role */
-        .employee-row.open-role {
-            border: 2px dashed var(--accent-light);
-            background: rgba(124, 58, 237, 0.03);
-        }
-
-        .employee-row.open-role .employee-avatar-sm {
-            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
-            border: 2px dashed var(--accent);
-        }
-
-        .open-role-badge {
-            font-size: 10px;
-            font-weight: 600;
-            padding: 2px 8px;
-            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+        
+        .tab.active {
             color: var(--accent);
-            border-radius: 10px;
         }
-
-        /* Drop Zone */
-        .drop-zone {
-            border: 2px dashed var(--border);
-            border-radius: var(--radius-sm);
-            padding: 24px;
-            text-align: center;
-            margin-top: 12px;
-            transition: all 0.2s;
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
         }
-
-        .drop-zone.active {
-            border-color: var(--accent);
-            background: var(--accent-glow);
-        }
-
-        .drop-zone-text {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        /* Changes Badge */
-        .changes-indicator {
+        
+        /* Scenario Header */
+        .scenario-header {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: rgba(245, 158, 11, 0.1);
-            border-radius: 20px;
-            font-size: 13px;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .scenario-select {
+            height: 40px;
+            padding: 0 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
             font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            min-width: 200px;
+        }
+        
+        .scenario-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--accent-light);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--accent);
+        }
+        
+        .scenario-badge.draft {
+            background: #FEF3C7;
             color: var(--warning);
         }
-
-        .changes-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--warning);
-            animation: pulse 2s infinite;
+        
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
         }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        
+        .summary-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
         }
-
-        /* Add Role Button */
-        .add-role-btn {
+        
+        .summary-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 6px;
+        }
+        
+        .summary-value {
+            font-size: 28px;
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        
+        .summary-change {
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .summary-change.positive {
+            color: var(--success);
+        }
+        
+        .summary-change.negative {
+            color: var(--warning);
+        }
+        
+        /* Card */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+        
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 0;
+        }
+        
+        /* Table */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-tertiary);
+            background: var(--bg-main);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .table td {
+            padding: 14px 16px;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        
+        .table tr:nth-child(even) {
+            background: var(--bg-main);
+        }
+        
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .table tr:hover {
+            background: var(--accent-light);
+        }
+        
+        .dept-name {
+            font-weight: 500;
+        }
+        
+        .budget-cell {
+            text-align: right;
+        }
+        
+        .change-positive {
+            color: var(--success);
+            font-weight: 500;
+        }
+        
+        .change-negative {
+            color: var(--warning);
+            font-weight: 500;
+        }
+        
+        .action-btn {
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 500;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 150ms ease;
+        }
+        
+        .action-btn:hover {
+            background: var(--bg-main);
+            color: var(--text-primary);
+        }
+        
+        /* Comparison Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .comparison-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .comparison-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .comparison-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .comparison-badge {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: var(--bg-main);
+            color: var(--text-secondary);
+        }
+        
+        .comparison-badge.current {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+        
+        .comparison-body {
+            padding: 20px;
+        }
+        
+        .comparison-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .comparison-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .comparison-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .comparison-value {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        /* Timeline */
+        .timeline-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .timeline-bar {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 32px;
+            margin-bottom: 16px;
+        }
+        
+        .timeline-segment {
+            height: 100%;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 12px;
-            background: transparent;
-            border: 2px dashed var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text-muted);
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 12px;
+            color: white;
         }
-
-        .add-role-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(124, 58, 237, 0.03);
+        
+        .timeline-segment.current {
+            background: var(--accent);
+        }
+        
+        .timeline-segment.planned {
+            background: var(--border-dark);
+            color: var(--text-secondary);
+        }
+        
+        .timeline-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-tertiary);
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
+    <div class="app">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <a href="dashboard.html" class="logo">
-                    <div class="logo-icon">◈</div>
+                <a href="index.html" class="logo">
+                    <div class="logo-mark">OV</div>
                     <span class="logo-text">OrgViz Pro</span>
                 </a>
             </div>
             
             <nav class="sidebar-nav">
                 <div class="nav-section">
-                    <div class="nav-section-title">Main</div>
+                    <div class="nav-label">Overview</div>
                     <a href="dashboard.html" class="nav-item">
-                        <span class="nav-icon">📊</span>
+                        <span class="nav-icon">▦</span>
                         Dashboard
                     </a>
                     <a href="org-chart.html" class="nav-item">
-                        <span class="nav-icon">🏛️</span>
+                        <span class="nav-icon">⬡</span>
                         Org Chart
                     </a>
                     <a href="search.html" class="nav-item">
-                        <span class="nav-icon">👥</span>
+                        <span class="nav-icon">⌕</span>
                         Directory
                     </a>
                 </div>
                 
                 <div class="nav-section">
-                    <div class="nav-section-title">Planning</div>
+                    <div class="nav-label">Planning</div>
                     <a href="workforce-planning.html" class="nav-item active">
-                        <span class="nav-icon">📐</span>
-                        Workforce Planning
-                        <span class="nav-badge">3</span>
+                        <span class="nav-icon">▤</span>
+                        Workforce
                     </a>
                     <a href="analytics.html" class="nav-item">
-                        <span class="nav-icon">📈</span>
+                        <span class="nav-icon">◫</span>
                         Analytics
                     </a>
                 </div>
             </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-card">
+                    <div class="user-avatar">JD</div>
+                    <div class="user-info">
+                        <div class="user-name">Jane Doe</div>
+                        <div class="user-role">Admin</div>
+                    </div>
+                </div>
+            </div>
         </aside>
         
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Top Bar -->
-            <header class="topbar">
-                <h1 class="page-title">Workforce Planning</h1>
-                
-                <div class="scenario-selector">
-                    <span class="scenario-label">Comparing:</span>
-                    <div class="scenario-dropdown">
-                        <span class="scenario-status draft"></span>
-                        <span class="scenario-name">Q2 2024 Reorg</span>
-                        <span class="scenario-chevron">▼</span>
-                    </div>
-                </div>
-                
+        <!-- Main -->
+        <main class="main">
+            <div class="topbar">
+                <h1 class="topbar-title">Workforce Planning</h1>
                 <div class="topbar-spacer"></div>
-                
-                <div class="changes-indicator">
-                    <span class="changes-dot"></span>
-                    12 unsaved changes
-                </div>
-                
-                <div class="topbar-actions">
-                    <button class="btn btn-secondary">↩️ Discard</button>
-                    <button class="btn btn-secondary">📋 Duplicate</button>
-                    <button class="btn btn-primary">💾 Save Scenario</button>
-                </div>
-            </header>
+                <button class="btn btn-secondary" style="margin-right:8px;">Export</button>
+                <button class="btn btn-primary">+ New Scenario</button>
+            </div>
             
-            <!-- Planning Layout -->
-            <div class="planning-layout">
-                <!-- Impact Panel -->
-                <aside class="impact-panel">
-                    <div class="panel-header">
-                        <div class="panel-title">Impact Summary</div>
-                        <div class="panel-subtitle">Changes vs. current structure</div>
-                    </div>
-                    
-                    <div class="panel-body">
-                        <div class="impact-card">
-                            <div class="impact-card-header">
-                                <span class="impact-card-title">Total Headcount</span>
-                                <span class="impact-card-badge increase">+8</span>
-                            </div>
-                            <div class="impact-value">2,855</div>
-                            <div class="impact-comparison">
-                                <span class="impact-current">Currently: 2,847</span>
-                                <span class="impact-arrow">→</span>
-                                <span class="impact-change negative">+0.3%</span>
-                            </div>
-                        </div>
-                        
-                        <div class="impact-card">
-                            <div class="impact-card-header">
-                                <span class="impact-card-title">Open Roles</span>
-                                <span class="impact-card-badge increase">+14</span>
-                            </div>
-                            <div class="impact-value">81</div>
-                            <div class="impact-comparison">
-                                <span class="impact-current">Currently: 67</span>
-                                <span class="impact-arrow">→</span>
-                                <span class="impact-change negative">+20.9%</span>
-                            </div>
-                        </div>
-                        
-                        <div class="impact-card">
-                            <div class="impact-card-header">
-                                <span class="impact-card-title">Avg Span of Control</span>
-                                <span class="impact-card-badge decrease">-0.4</span>
-                            </div>
-                            <div class="impact-value">5.8</div>
-                            <div class="impact-comparison">
-                                <span class="impact-current">Currently: 6.2</span>
-                                <span class="impact-arrow">→</span>
-                                <span class="impact-change positive">-6.5%</span>
-                            </div>
-                        </div>
-                        
-                        <div class="impact-card">
-                            <div class="impact-card-header">
-                                <span class="impact-card-title">Annual Budget Impact</span>
-                                <span class="impact-card-badge increase">+$1.8M</span>
-                            </div>
-                            <div class="impact-value">$48.2M</div>
-                            <div class="impact-comparison">
-                                <span class="impact-current">Currently: $46.4M</span>
-                                <span class="impact-arrow">→</span>
-                                <span class="impact-change negative">+3.9%</span>
-                            </div>
-                            
-                            <div class="budget-breakdown">
-                                <div class="budget-row">
-                                    <span class="budget-label">New hires (14)</span>
-                                    <span class="budget-value">+$2.1M</span>
-                                </div>
-                                <div class="budget-row">
-                                    <span class="budget-label">Promotions (6)</span>
-                                    <span class="budget-value">+$180K</span>
-                                </div>
-                                <div class="budget-row">
-                                    <span class="budget-label">Attrition savings</span>
-                                    <span class="budget-value">-$480K</span>
-                                </div>
-                                <div class="budget-row">
-                                    <span class="budget-label">Net change</span>
-                                    <span class="budget-value" style="color: var(--danger);">+$1.8M</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
+            <div class="content">
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab active">Scenarios</button>
+                    <button class="tab">Headcount Plan</button>
+                    <button class="tab">Budget Analysis</button>
+                    <button class="tab">Timeline</button>
+                </div>
                 
-                <!-- Comparison View -->
-                <div class="comparison-view">
-                    <!-- Current State -->
-                    <div class="comparison-column">
-                        <div class="column-header">
-                            <div class="column-title">
-                                <span class="column-status current"></span>
-                                <span class="column-name">Current State</span>
-                            </div>
-                            <span class="column-meta">As of Feb 12, 2024</span>
+                <!-- Scenario Header -->
+                <div class="scenario-header">
+                    <select class="scenario-select">
+                        <option>Q1 2025 Expansion Plan</option>
+                        <option>Q2 2025 Consolidation</option>
+                        <option>2025 Baseline</option>
+                    </select>
+                    <span class="scenario-badge draft">Draft</span>
+                    <span style="color:var(--text-tertiary);font-size:13px;">Last updated 2 hours ago</span>
+                </div>
+                
+                <!-- Summary Cards -->
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-label">Planned Headcount</div>
+                        <div class="summary-value mono">912</div>
+                        <span class="summary-change positive">↑ +65 from current</span>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Annual Budget</div>
+                        <div class="summary-value mono">$24.8M</div>
+                        <span class="summary-change negative">↑ +$2.1M (8.4%)</span>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Open Positions</div>
+                        <div class="summary-value mono">38</div>
+                        <span class="summary-change">23 approved, 15 pending</span>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Cost per Employee</div>
+                        <div class="summary-value mono">$27.2K</div>
+                        <span class="summary-change positive">↓ -2.3% avg</span>
+                    </div>
+                </div>
+                
+                <!-- Department Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Department Breakdown</h3>
+                        <button class="btn btn-secondary" style="height:32px;padding:0 12px;font-size:12px;">Add Department</button>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Current</th>
+                                    <th>Planned</th>
+                                    <th>Change</th>
+                                    <th class="budget-cell">Current Budget</th>
+                                    <th class="budget-cell">Planned Budget</th>
+                                    <th class="budget-cell">Variance</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="dept-name">Engineering</td>
+                                    <td class="mono">234</td>
+                                    <td class="mono">278</td>
+                                    <td class="change-positive mono">+44</td>
+                                    <td class="budget-cell mono">$8.2M</td>
+                                    <td class="budget-cell mono">$9.7M</td>
+                                    <td class="budget-cell change-negative mono">+$1.5M</td>
+                                    <td><button class="action-btn">Edit</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="dept-name">Sales</td>
+                                    <td class="mono">156</td>
+                                    <td class="mono">168</td>
+                                    <td class="change-positive mono">+12</td>
+                                    <td class="budget-cell mono">$4.8M</td>
+                                    <td class="budget-cell mono">$5.2M</td>
+                                    <td class="budget-cell change-negative mono">+$0.4M</td>
+                                    <td><button class="action-btn">Edit</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="dept-name">Marketing</td>
+                                    <td class="mono">89</td>
+                                    <td class="mono">95</td>
+                                    <td class="change-positive mono">+6</td>
+                                    <td class="budget-cell mono">$2.4M</td>
+                                    <td class="budget-cell mono">$2.6M</td>
+                                    <td class="budget-cell change-negative mono">+$0.2M</td>
+                                    <td><button class="action-btn">Edit</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="dept-name">Product</td>
+                                    <td class="mono">78</td>
+                                    <td class="mono">82</td>
+                                    <td class="change-positive mono">+4</td>
+                                    <td class="budget-cell mono">$2.8M</td>
+                                    <td class="budget-cell mono">$2.9M</td>
+                                    <td class="budget-cell change-negative mono">+$0.1M</td>
+                                    <td><button class="action-btn">Edit</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="dept-name">Operations</td>
+                                    <td class="mono">64</td>
+                                    <td class="mono">64</td>
+                                    <td class="mono" style="color:var(--text-tertiary)">—</td>
+                                    <td class="budget-cell mono">$1.6M</td>
+                                    <td class="budget-cell mono">$1.6M</td>
+                                    <td class="budget-cell mono" style="color:var(--text-tertiary)">—</td>
+                                    <td><button class="action-btn">Edit</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="dept-name">Finance</td>
+                                    <td class="mono">52</td>
+                                    <td class="mono">52</td>
+                                    <td class="mono" style="color:var(--text-tertiary)">—</td>
+                                    <td class="budget-cell mono">$1.4M</td>
+                                    <td class="budget-cell mono">$1.4M</td>
+                                    <td class="budget-cell mono" style="color:var(--text-tertiary)">—</td>
+                                    <td><button class="action-btn">Edit</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Comparison -->
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <div class="comparison-header">
+                            <span class="comparison-title">Current State</span>
+                            <span class="comparison-badge current">Live</span>
                         </div>
-                        <div class="column-body">
-                            <!-- Engineering -->
-                            <div class="dept-card">
-                                <div class="dept-card-header">
-                                    <div class="dept-icon eng">⚙️</div>
-                                    <div class="dept-info">
-                                        <div class="dept-name">Engineering</div>
-                                        <div class="dept-meta">Rachel Lee • 4 directors</div>
-                                    </div>
-                                    <div class="dept-headcount">
-                                        <span class="headcount-value">842</span>
-                                    </div>
-                                    <span class="dept-expand">▼</span>
-                                </div>
-                                <div class="dept-card-body">
-                                    <div class="employee-row">
-                                        <span class="drag-handle">⋮⋮</span>
-                                        <div class="employee-avatar-sm">AT</div>
-                                        <div class="employee-info-sm">
-                                            <div class="employee-name-sm">Alex Torres</div>
-                                            <div class="employee-title-sm">Director, Backend • 8 reports</div>
-                                        </div>
-                                        <div class="employee-actions">
-                                            <button class="action-icon">✏️</button>
-                                            <button class="action-icon">↗️</button>
-                                        </div>
-                                    </div>
-                                    <div class="employee-row">
-                                        <span class="drag-handle">⋮⋮</span>
-                                        <div class="employee-avatar-sm">EH</div>
-                                        <div class="employee-info-sm">
-                                            <div class="employee-name-sm">Emma Hughes</div>
-                                            <div class="employee-title-sm">Director, Frontend • 6 reports</div>
-                                        </div>
-                                        <div class="employee-actions">
-                                            <button class="action-icon">✏️</button>
-                                            <button class="action-icon">↗️</button>
-                                        </div>
-                                    </div>
-                                    <div class="employee-row">
-                                        <span class="drag-handle">⋮⋮</span>
-                                        <div class="employee-avatar-sm">KP</div>
-                                        <div class="employee-info-sm">
-                                            <div class="employee-name-sm">Kevin Patel</div>
-                                            <div class="employee-title-sm">Director, Platform • 5 reports</div>
-                                        </div>
-                                        <div class="employee-actions">
-                                            <button class="action-icon">✏️</button>
-                                            <button class="action-icon">↗️</button>
-                                        </div>
-                                    </div>
-                                    <div class="employee-row">
-                                        <span class="drag-handle">⋮⋮</span>
-                                        <div class="employee-avatar-sm">JR</div>
-                                        <div class="employee-info-sm">
-                                            <div class="employee-name-sm">Julia Roberts</div>
-                                            <div class="employee-title-sm">Director, Security • 4 reports</div>
-                                        </div>
-                                        <div class="employee-actions">
-                                            <button class="action-icon">✏️</button>
-                                            <button class="action-icon">↗️</button>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="comparison-body">
+                            <div class="comparison-row">
+                                <span class="comparison-label">Total Headcount</span>
+                                <span class="comparison-value mono">847</span>
                             </div>
-                            
-                            <!-- Product -->
-                            <div class="dept-card">
-                                <div class="dept-card-header">
-                                    <div class="dept-icon product">🎯</div>
-                                    <div class="dept-info">
-                                        <div class="dept-name">Product</div>
-                                        <div class="dept-meta">David Wang • 3 directors</div>
-                                    </div>
-                                    <div class="dept-headcount">
-                                        <span class="headcount-value">156</span>
-                                    </div>
-                                    <span class="dept-expand">▶</span>
-                                </div>
+                            <div class="comparison-row">
+                                <span class="comparison-label">Total Budget</span>
+                                <span class="comparison-value mono">$22.7M</span>
                             </div>
-                            
-                            <!-- Sales -->
-                            <div class="dept-card">
-                                <div class="dept-card-header">
-                                    <div class="dept-icon sales">💰</div>
-                                    <div class="dept-info">
-                                        <div class="dept-name">Sales</div>
-                                        <div class="dept-meta">Jessica Parker • 6 directors</div>
-                                    </div>
-                                    <div class="dept-headcount">
-                                        <span class="headcount-value">534</span>
-                                    </div>
-                                    <span class="dept-expand">▶</span>
-                                </div>
+                            <div class="comparison-row">
+                                <span class="comparison-label">Departments</span>
+                                <span class="comparison-value mono">12</span>
+                            </div>
+                            <div class="comparison-row">
+                                <span class="comparison-label">Avg Span of Control</span>
+                                <span class="comparison-value mono">6.2</span>
+                            </div>
+                            <div class="comparison-row">
+                                <span class="comparison-label">Org Depth</span>
+                                <span class="comparison-value mono">7 levels</span>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Planned State -->
-                    <div class="comparison-column">
-                        <div class="column-header">
-                            <div class="column-title">
-                                <span class="column-status draft"></span>
-                                <span class="column-name">Q2 2024 Reorg (Draft)</span>
-                            </div>
-                            <span class="column-meta">Last edited 2 hours ago</span>
+                    <div class="comparison-card">
+                        <div class="comparison-header">
+                            <span class="comparison-title">Q1 2025 Expansion Plan</span>
+                            <span class="comparison-badge">Draft</span>
                         </div>
-                        <div class="column-body">
-                            <!-- Engineering -->
-                            <div class="dept-card">
-                                <div class="dept-card-header">
-                                    <div class="dept-icon eng">⚙️</div>
-                                    <div class="dept-info">
-                                        <div class="dept-name">Engineering</div>
-                                        <div class="dept-meta">Rachel Lee • 5 directors</div>
-                                    </div>
-                                    <div class="dept-headcount">
-                                        <span class="headcount-value">856</span>
-                                        <span class="headcount-change up">+14</span>
-                                    </div>
-                                    <span class="dept-expand">▼</span>
-                                </div>
-                                <div class="dept-card-body">
-                                    <div class="employee-row">
-                                        <span class="drag-handle">⋮⋮</span>
-                                        <div class="employee-avatar-sm">AT</div>
-                                        <div class="employee-info-sm">
-                                            <div class="employee-name-sm">Alex Torres</div>
-                                            <div class="employee-title-sm">Director, Backend • 8 reports</div>
-                                        </div>
-                                        <div class="employee-actions">
-                                            <button class="action-icon">✏️</button>
-                                            <button class="action-icon">↗️</button>
-                                        </div>
-                                    </div>
-                                    <div class="employee-row">
-                                        <span class="drag-handle">⋮⋮</span>
-                                        <div class="employee-avatar-sm">EH</div>
-                                        <div class="employee-info-sm">
-                                            <div class="employee-name-sm">Emma Hughes</div>
-                                            <div class="employee-title-sm">Director, Frontend • 6 reports</div>
-                                        </div>
-                                        <div class="employee-actions">
-                                            <button class="action-icon">✏️</button>
-                                            <button class="action-icon">↗️</button>
-                                        </div>
-                                    </div>
-                                    <div class="employee-row">
-                                        <span class="drag-handle">⋮⋮</span>
-                                        <div class="employee-avatar-sm">KP</div>
-                                        <div class="employee-info-sm">
-                                            <div class="employee-name-sm">Kevin Patel</div>
-                                            <div class="employee-title-sm">Director, Platform • 5 reports</div>
-                                        </div>
-                                        <div class="employee-actions">
-                                            <button class="action-icon">✏️</button>
-                                            <button class="action-icon">↗️</button>
-                                        </div>
-                                    </div>
-                                    <div class="employee-row">
-                                        <span class="drag-handle">⋮⋮</span>
-                                        <div class="employee-avatar-sm">JR</div>
-                                        <div class="employee-info-sm">
-                                            <div class="employee-name-sm">Julia Roberts</div>
-                                            <div class="employee-title-sm">Director, Security • 4 reports</div>
-                                        </div>
-                                        <div class="employee-actions">
-                                            <button class="action-icon">✏️</button>
-                                            <button class="action-icon">↗️</button>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Open Role -->
-                                    <div class="employee-row open-role">
-                                        <span class="drag-handle">⋮⋮</span>
-                                        <div class="employee-avatar-sm">?</div>
-                                        <div class="employee-info-sm">
-                                            <div class="employee-name-sm">Director, AI/ML</div>
-                                            <div class="employee-title-sm">New role • Reporting to Rachel Lee</div>
-                                        </div>
-                                        <span class="open-role-badge">Open Role</span>
-                                    </div>
-                                    
-                                    <button class="add-role-btn">
-                                        ➕ Add role or position
-                                    </button>
-                                    
-                                    <div class="drop-zone">
-                                        <span class="drop-zone-text">Drop here to move to Engineering</span>
-                                    </div>
-                                </div>
+                        <div class="comparison-body">
+                            <div class="comparison-row">
+                                <span class="comparison-label">Total Headcount</span>
+                                <span class="comparison-value mono">912 <span style="color:var(--success);font-size:11px;">+65</span></span>
                             </div>
-                            
-                            <!-- Product -->
-                            <div class="dept-card">
-                                <div class="dept-card-header">
-                                    <div class="dept-icon product">🎯</div>
-                                    <div class="dept-info">
-                                        <div class="dept-name">Product</div>
-                                        <div class="dept-meta">David Wang • 3 directors</div>
-                                    </div>
-                                    <div class="dept-headcount">
-                                        <span class="headcount-value">162</span>
-                                        <span class="headcount-change up">+6</span>
-                                    </div>
-                                    <span class="dept-expand">▶</span>
-                                </div>
+                            <div class="comparison-row">
+                                <span class="comparison-label">Total Budget</span>
+                                <span class="comparison-value mono">$24.8M <span style="color:var(--warning);font-size:11px;">+$2.1M</span></span>
                             </div>
-                            
-                            <!-- Sales -->
-                            <div class="dept-card">
-                                <div class="dept-card-header">
-                                    <div class="dept-icon sales">💰</div>
-                                    <div class="dept-info">
-                                        <div class="dept-name">Sales</div>
-                                        <div class="dept-meta">Jessica Parker • 6 directors</div>
-                                    </div>
-                                    <div class="dept-headcount">
-                                        <span class="headcount-value">528</span>
-                                        <span class="headcount-change down">-6</span>
-                                    </div>
-                                    <span class="dept-expand">▶</span>
-                                </div>
+                            <div class="comparison-row">
+                                <span class="comparison-label">Departments</span>
+                                <span class="comparison-value mono">13 <span style="color:var(--success);font-size:11px;">+1</span></span>
+                            </div>
+                            <div class="comparison-row">
+                                <span class="comparison-label">Avg Span of Control</span>
+                                <span class="comparison-value mono">6.4</span>
+                            </div>
+                            <div class="comparison-row">
+                                <span class="comparison-label">Org Depth</span>
+                                <span class="comparison-value mono">7 levels</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+                
+                <!-- Timeline -->
+                <div class="timeline-card" style="margin-top:24px;">
+                    <div class="timeline-header">
+                        <span class="timeline-title">Implementation Timeline</span>
+                        <span style="font-size:12px;color:var(--text-tertiary);">Q1 - Q4 2025</span>
+                    </div>
+                    <div class="timeline-bar">
+                        <div class="timeline-segment current" style="flex:25%;">Q1</div>
+                        <div class="timeline-segment planned" style="flex:25%;">Q2</div>
+                        <div class="timeline-segment planned" style="flex:25%;">Q3</div>
+                        <div class="timeline-segment planned" style="flex:25%;">Q4</div>
+                    </div>
+                    <div class="timeline-labels">
+                        <span>Jan</span>
+                        <span>Apr</span>
+                        <span>Jul</span>
+                        <span>Oct</span>
+                        <span>Dec</span>
                     </div>
                 </div>
             </div>
         </main>
     </div>
-    
-    <script>
-        // Toggle department expansion
-        document.querySelectorAll('.dept-card-header').forEach(header => {
-            header.addEventListener('click', () => {
-                const card = header.closest('.dept-card');
-                const body = card.querySelector('.dept-card-body');
-                const expand = header.querySelector('.dept-expand');
-                
-                if (body) {
-                    body.style.display = body.style.display === 'none' ? 'block' : 'none';
-                    expand.textContent = body.style.display === 'none' ? '▶' : '▼';
-                }
-            });
-        });
-        
-        // Drag and drop simulation
-        document.querySelectorAll('.employee-row:not(.open-role)').forEach(row => {
-            row.setAttribute('draggable', 'true');
-            
-            row.addEventListener('dragstart', (e) => {
-                row.classList.add('dragging');
-            });
-            
-            row.addEventListener('dragend', (e) => {
-                row.classList.remove('dragging');
-            });
-        });
-        
-        document.querySelectorAll('.drop-zone').forEach(zone => {
-            zone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                zone.classList.add('active');
-            });
-            
-            zone.addEventListener('dragleave', () => {
-                zone.classList.remove('active');
-            });
-            
-            zone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                zone.classList.remove('active');
-            });
-        });
-    </script>
 </body>
 </html>

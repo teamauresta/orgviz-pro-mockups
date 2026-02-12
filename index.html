@@ -1,22 +1,167 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>OrgViz Pro Mockups</title>
-<style>
-body{font-family:Inter,system-ui,sans-serif;background:#0f0d2e;color:#e2e8f0;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}
-.container{max-width:600px;padding:40px}
-h1{color:#a78bfa;font-size:2rem;margin-bottom:8px}
-p{color:#94a3b8;margin-bottom:32px}
-a{display:block;padding:16px 24px;margin:8px 0;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:12px;color:#c4b5fd;text-decoration:none;transition:all 0.2s}
-a:hover{background:rgba(124,58,237,0.3);transform:translateX(4px)}
-span{font-size:1.2em;margin-right:8px}
-</style></head><body>
-<div class="container">
-<h1>OrgViz Pro</h1>
-<p>UI Mockups — Cloud-Native Org Chart Platform</p>
-<a href="landing.html"><span>🌐</span> Landing Page</a>
-<a href="dashboard.html"><span>📊</span> Dashboard</a>
-<a href="org-chart.html"><span>🏢</span> Org Chart</a>
-<a href="employee-profile.html"><span>👤</span> Employee Profile</a>
-<a href="search.html"><span>🔍</span> Search & Directory</a>
-<a href="workforce-planning.html"><span>📋</span> Workforce Planning</a>
-<a href="analytics.html"><span>📈</span> Analytics</a>
-</div></body></html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrgViz Pro — Mockups</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #FAFAFA;
+            color: #111111;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 32px;
+        }
+        
+        .container {
+            max-width: 480px;
+            width: 100%;
+        }
+        
+        .header {
+            margin-bottom: 32px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .logo-mark {
+            width: 36px;
+            height: 36px;
+            background: #0D9488;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #111111;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: #555555;
+        }
+        
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            border-radius: 8px;
+            color: #111111;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 150ms ease;
+        }
+        
+        a:hover {
+            border-color: #0D9488;
+            background: #CCFBF1;
+        }
+        
+        .icon {
+            width: 32px;
+            height: 32px;
+            background: #F5F5F5;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #555555;
+        }
+        
+        a:hover .icon {
+            background: #0D9488;
+            color: white;
+        }
+        
+        .arrow {
+            margin-left: auto;
+            color: #999999;
+            font-size: 18px;
+        }
+        
+        a:hover .arrow {
+            color: #0D9488;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-mark">OV</div>
+                <h1>OrgViz Pro</h1>
+            </div>
+            <p class="subtitle">UI Mockups — Workforce Intelligence Platform</p>
+        </div>
+        
+        <div class="links">
+            <a href="landing.html">
+                <div class="icon">◇</div>
+                Landing Page
+                <span class="arrow">→</span>
+            </a>
+            <a href="dashboard.html">
+                <div class="icon">▦</div>
+                Dashboard
+                <span class="arrow">→</span>
+            </a>
+            <a href="org-chart.html">
+                <div class="icon">⬡</div>
+                Org Chart
+                <span class="arrow">→</span>
+            </a>
+            <a href="employee-profile.html">
+                <div class="icon">○</div>
+                Employee Profile
+                <span class="arrow">→</span>
+            </a>
+            <a href="search.html">
+                <div class="icon">⌕</div>
+                Search & Directory
+                <span class="arrow">→</span>
+            </a>
+            <a href="workforce-planning.html">
+                <div class="icon">▤</div>
+                Workforce Planning
+                <span class="arrow">→</span>
+            </a>
+            <a href="analytics.html">
+                <div class="icon">◫</div>
+                Analytics
+                <span class="arrow">→</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
