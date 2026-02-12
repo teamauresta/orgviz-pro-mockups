@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics | OrgViz Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e1b4b;
+            --primary-light: #312e81;
+            --accent: #7c3aed;
+            --accent-light: #a78bfa;
+            --accent-glow: rgba(124, 58, 237, 0.3);
+            --bg-light: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.4);
+            padding: 8px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, var(--accent) 0%, rgba(124, 58, 237, 0.7) 100%);
+            color: white;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+        /* Top Bar */
+        .topbar {
+            height: 72px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 32px;
+            gap: 20px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .topbar-spacer {
+            flex: 1;
+        }
+
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .btn {
+            height: 40px;
+            padding: 0 20px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+        }
+
+        .btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Page Content */
+        .page-content {
+            padding: 32px;
+        }
+
+        /* Org Health Score Card */
+        .health-score-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            margin-bottom: 32px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .health-score-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .health-gauge {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            flex-shrink: 0;
+        }
+
+        .gauge-bg {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: conic-gradient(
+                rgba(255, 255, 255, 0.1) 0deg,
+                rgba(255, 255, 255, 0.1) 360deg
+            );
+        }
+
+        .gauge-fill {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--success) 0deg,
+                var(--success) 280deg,
+                transparent 280deg,
+                transparent 360deg
+            );
+            mask: radial-gradient(transparent 55%, black 55%);
+            -webkit-mask: radial-gradient(transparent 55%, black 55%);
+        }
+
+        .gauge-center {
+            position: absolute;
+            inset: 20%;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gauge-value {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .gauge-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 4px;
+        }
+
+        .health-details {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .health-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .health-desc {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 24px;
+            max-width: 500px;
+        }
+
+        .health-metrics {
+            display: flex;
+            gap: 32px;
+        }
+
+        .health-metric {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .metric-trend {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .metric-trend.positive {
+            color: #6ee7b7;
+        }
+
+        .metric-trend.negative {
+            color: #fca5a5;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .dashboard-grid.two-col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-action {
+            font-size: 13px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Bar Chart */
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .bar-label {
+            width: 100px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .bar-container {
+            flex: 1;
+            height: 28px;
+            background: var(--bg-light);
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 14px;
+            transition: width 0.6s ease;
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+        }
+
+        .bar-fill.engineering {
+            background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+        }
+
+        .bar-fill.product {
+            background: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 100%);
+        }
+
+        .bar-fill.sales {
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+        }
+
+        .bar-fill.marketing {
+            background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+        }
+
+        .bar-fill.hr {
+            background: linear-gradient(90deg, #ec4899 0%, #f472b6 100%);
+        }
+
+        .bar-fill.finance {
+            background: linear-gradient(90deg, #06b6d4 0%, #22d3ee 100%);
+        }
+
+        .bar-value {
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .bar-number {
+            width: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        /* Span of Control Distribution */
+        .span-distribution {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 160px;
+            padding-top: 20px;
+        }
+
+        .span-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .span-bar-fill {
+            width: 100%;
+            background: linear-gradient(180deg, var(--accent) 0%, var(--accent-light) 100%);
+            border-radius: 6px 6px 0 0;
+            transition: height 0.6s ease;
+            position: relative;
+        }
+
+        .span-bar-fill::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .span-bar-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .span-bar.highlight .span-bar-fill {
+            background: linear-gradient(180deg, var(--success) 0%, #34d399 100%);
+        }
+
+        /* Tenure Distribution */
+        .tenure-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tenure-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tenure-label {
+            width: 80px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .tenure-bar-container {
+            flex: 1;
+            height: 20px;
+            background: var(--bg-light);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .tenure-bar {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%);
+        }
+
+        .tenure-percent {
+            width: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        /* Geographic Distribution */
+        .geo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .geo-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .geo-flag {
+            font-size: 24px;
+        }
+
+        .geo-info {
+            flex: 1;
+        }
+
+        .geo-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .geo-details {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .geo-count {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .geo-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--bg-light);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .geo-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: var(--accent);
+        }
+
+        /* Trend Line */
+        .trend-container {
+            padding: 20px 0;
+        }
+
+        .trend-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .trend-stat {
+            text-align: center;
+        }
+
+        .trend-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .trend-stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .trend-stat-change {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .trend-stat-change.positive {
+            color: var(--success);
+        }
+
+        .trend-stat-change.negative {
+            color: var(--danger);
+        }
+
+        .trend-chart {
+            height: 100px;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            padding: 0 4px;
+        }
+
+        .trend-point {
+            flex: 1;
+            background: linear-gradient(180deg, var(--accent) 0%, transparent 100%);
+            border-radius: 4px 4px 0 0;
+            transition: height 0.4s ease;
+            opacity: 0.6;
+        }
+
+        .trend-point:hover {
+            opacity: 1;
+        }
+
+        .trend-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding: 0 4px;
+        }
+
+        .trend-label {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* AI Insights */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+            border: 1px solid #e9d5ff;
+            border-radius: var(--radius-md);
+            padding: 20px;
+            display: flex;
+            gap: 16px;
+        }
+
+        .insight-card.warning {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-color: #fde68a;
+        }
+
+        .insight-card.success {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-color: #a7f3d0;
+        }
+
+        .insight-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .insight-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .insight-action {
+            margin-top: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .insight-action:hover {
+            text-decoration: underline;
+        }
+
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="dashboard.html" class="logo">
+                    <div class="logo-icon">◈</div>
+                    <span class="logo-text">OrgViz Pro</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        Dashboard
+                    </a>
+                    <a href="org-chart.html" class="nav-item">
+                        <span class="nav-icon">🏛️</span>
+                        Org Chart
+                    </a>
+                    <a href="search.html" class="nav-item">
+                        <span class="nav-icon">👥</span>
+                        Directory
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Planning</div>
+                    <a href="workforce-planning.html" class="nav-item">
+                        <span class="nav-icon">📐</span>
+                        Workforce Planning
+                    </a>
+                    <a href="analytics.html" class="nav-item active">
+                        <span class="nav-icon">📈</span>
+                        Analytics
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="topbar">
+                <h1 class="page-title">Analytics & Insights</h1>
+                <div class="topbar-spacer"></div>
+                <div class="date-range">
+                    📅 Last 12 months
+                    <span>▼</span>
+                </div>
+                <button class="btn">⬇️ Export Report</button>
+            </header>
+            
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Org Health Score -->
+                <div class="health-score-card">
+                    <div class="health-gauge">
+                        <div class="gauge-bg"></div>
+                        <div class="gauge-fill"></div>
+                        <div class="gauge-center">
+                            <span class="gauge-value">78</span>
+                            <span class="gauge-label">out of 100</span>
+                        </div>
+                    </div>
+                    <div class="health-details">
+                        <h2 class="health-title">Organization Health Score</h2>
+                        <p class="health-desc">Your org health is above average. Key areas performing well include span of control and tenure diversity. Focus on improving manager-to-IC ratio in Engineering.</p>
+                        <div class="health-metrics">
+                            <div class="health-metric">
+                                <span class="metric-value">6.2</span>
+                                <span class="metric-label">Avg Span of Control</span>
+                                <span class="metric-trend positive">↑ 0.4 from last quarter</span>
+                            </div>
+                            <div class="health-metric">
+                                <span class="metric-value">3.4</span>
+                                <span class="metric-label">Avg Org Depth</span>
+                                <span class="metric-trend positive">→ No change</span>
+                            </div>
+                            <div class="health-metric">
+                                <span class="metric-value">2.8 yr</span>
+                                <span class="metric-label">Avg Tenure</span>
+                                <span class="metric-trend positive">↑ 0.3 from last year</span>
+                            </div>
+                            <div class="health-metric">
+                                <span class="metric-value">12%</span>
+                                <span class="metric-label">Attrition Rate</span>
+                                <span class="metric-trend positive">↓ 2% from last year</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts Row -->
+                <div class="dashboard-grid">
+                    <!-- Department Size Breakdown -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Department Size</h2>
+                            <a href="#" class="card-action">View details →</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="bar-chart">
+                                <div class="bar-row">
+                                    <span class="bar-label">Engineering</span>
+                                    <div class="bar-container">
+                                        <div class="bar-fill engineering" style="width: 85%">
+                                            <span class="bar-value">842</span>
+                                        </div>
+                                    </div>
+                                    <span class="bar-number">29.6%</span>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Sales</span>
+                                    <div class="bar-container">
+                                        <div class="bar-fill sales" style="width: 54%">
+                                            <span class="bar-value">534</span>
+                                        </div>
+                                    </div>
+                                    <span class="bar-number">18.8%</span>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Marketing</span>
+                                    <div class="bar-container">
+                                        <div class="bar-fill marketing" style="width: 19%">
+                                            <span class="bar-value">187</span>
+                                        </div>
+                                    </div>
+                                    <span class="bar-number">6.6%</span>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Product</span>
+                                    <div class="bar-container">
+                                        <div class="bar-fill product" style="width: 16%">
+                                            <span class="bar-value">156</span>
+                                        </div>
+                                    </div>
+                                    <span class="bar-number">5.5%</span>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">HR</span>
+                                    <div class="bar-container">
+                                        <div class="bar-fill hr" style="width: 9%">
+                                            <span class="bar-value">89</span>
+                                        </div>
+                                    </div>
+                                    <span class="bar-number">3.1%</span>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="bar-label">Finance</span>
+                                    <div class="bar-container">
+                                        <div class="bar-fill finance" style="width: 7%">
+                                            <span class="bar-value">67</span>
+                                        </div>
+                                    </div>
+                                    <span class="bar-number">2.4%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Span of Control Distribution -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Span of Control Distribution</h2>
+                            <span style="font-size: 12px; color: var(--text-muted);">Optimal: 5-8</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="span-distribution">
+                                <div class="span-bar">
+                                    <div class="span-bar-fill" style="height: 20%" data-value="23"></div>
+                                    <span class="span-bar-label">1-2</span>
+                                </div>
+                                <div class="span-bar">
+                                    <div class="span-bar-fill" style="height: 35%" data-value="42"></div>
+                                    <span class="span-bar-label">3-4</span>
+                                </div>
+                                <div class="span-bar highlight">
+                                    <div class="span-bar-fill" style="height: 80%" data-value="98"></div>
+                                    <span class="span-bar-label">5-6</span>
+                                </div>
+                                <div class="span-bar highlight">
+                                    <div class="span-bar-fill" style="height: 65%" data-value="76"></div>
+                                    <span class="span-bar-label">7-8</span>
+                                </div>
+                                <div class="span-bar">
+                                    <div class="span-bar-fill" style="height: 40%" data-value="48"></div>
+                                    <span class="span-bar-label">9-10</span>
+                                </div>
+                                <div class="span-bar">
+                                    <div class="span-bar-fill" style="height: 25%" data-value="31"></div>
+                                    <span class="span-bar-label">11+</span>
+                                </div>
+                            </div>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 16px; text-align: center;">
+                                55% of managers have optimal span (5-8 direct reports)
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Tenure Distribution -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Tenure Distribution</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="tenure-chart">
+                                <div class="tenure-row">
+                                    <span class="tenure-label">&lt; 1 year</span>
+                                    <div class="tenure-bar-container">
+                                        <div class="tenure-bar" style="width: 28%"></div>
+                                    </div>
+                                    <span class="tenure-percent">28%</span>
+                                </div>
+                                <div class="tenure-row">
+                                    <span class="tenure-label">1-2 years</span>
+                                    <div class="tenure-bar-container">
+                                        <div class="tenure-bar" style="width: 32%"></div>
+                                    </div>
+                                    <span class="tenure-percent">32%</span>
+                                </div>
+                                <div class="tenure-row">
+                                    <span class="tenure-label">2-5 years</span>
+                                    <div class="tenure-bar-container">
+                                        <div class="tenure-bar" style="width: 25%"></div>
+                                    </div>
+                                    <span class="tenure-percent">25%</span>
+                                </div>
+                                <div class="tenure-row">
+                                    <span class="tenure-label">5-10 years</span>
+                                    <div class="tenure-bar-container">
+                                        <div class="tenure-bar" style="width: 11%"></div>
+                                    </div>
+                                    <span class="tenure-percent">11%</span>
+                                </div>
+                                <div class="tenure-row">
+                                    <span class="tenure-label">10+ years</span>
+                                    <div class="tenure-bar-container">
+                                        <div class="tenure-bar" style="width: 4%"></div>
+                                    </div>
+                                    <span class="tenure-percent">4%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Second Row -->
+                <div class="dashboard-grid two-col">
+                    <!-- Geographic Distribution -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Geographic Distribution</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="geo-list">
+                                <div class="geo-item">
+                                    <span class="geo-flag">🇺🇸</span>
+                                    <div class="geo-info">
+                                        <div class="geo-name">United States</div>
+                                        <div class="geo-details">SF, NYC, Austin, Chicago</div>
+                                        <div class="geo-bar">
+                                            <div class="geo-bar-fill" style="width: 68%"></div>
+                                        </div>
+                                    </div>
+                                    <span class="geo-count">1,936</span>
+                                </div>
+                                <div class="geo-item">
+                                    <span class="geo-flag">🇬🇧</span>
+                                    <div class="geo-info">
+                                        <div class="geo-name">United Kingdom</div>
+                                        <div class="geo-details">London, Manchester</div>
+                                        <div class="geo-bar">
+                                            <div class="geo-bar-fill" style="width: 12%"></div>
+                                        </div>
+                                    </div>
+                                    <span class="geo-count">342</span>
+                                </div>
+                                <div class="geo-item">
+                                    <span class="geo-flag">🇩🇪</span>
+                                    <div class="geo-info">
+                                        <div class="geo-name">Germany</div>
+                                        <div class="geo-details">Berlin, Munich</div>
+                                        <div class="geo-bar">
+                                            <div class="geo-bar-fill" style="width: 8%"></div>
+                                        </div>
+                                    </div>
+                                    <span class="geo-count">228</span>
+                                </div>
+                                <div class="geo-item">
+                                    <span class="geo-flag">🇮🇳</span>
+                                    <div class="geo-info">
+                                        <div class="geo-name">India</div>
+                                        <div class="geo-details">Bangalore, Hyderabad</div>
+                                        <div class="geo-bar">
+                                            <div class="geo-bar-fill" style="width: 7%"></div>
+                                        </div>
+                                    </div>
+                                    <span class="geo-count">199</span>
+                                </div>
+                                <div class="geo-item">
+                                    <span class="geo-flag">🌍</span>
+                                    <div class="geo-info">
+                                        <div class="geo-name">Remote / Other</div>
+                                        <div class="geo-details">12 countries</div>
+                                        <div class="geo-bar">
+                                            <div class="geo-bar-fill" style="width: 5%"></div>
+                                        </div>
+                                    </div>
+                                    <span class="geo-count">142</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Headcount Trend -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Headcount Trend</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="trend-container">
+                                <div class="trend-header">
+                                    <div class="trend-stat">
+                                        <div class="trend-stat-value">2,847</div>
+                                        <div class="trend-stat-label">Current</div>
+                                        <div class="trend-stat-change positive">↑ 12.4% YoY</div>
+                                    </div>
+                                    <div class="trend-stat">
+                                        <div class="trend-stat-value">342</div>
+                                        <div class="trend-stat-label">Hired (12mo)</div>
+                                        <div class="trend-stat-change positive">↑ 8% vs prior</div>
+                                    </div>
+                                    <div class="trend-stat">
+                                        <div class="trend-stat-value">127</div>
+                                        <div class="trend-stat-label">Departed (12mo)</div>
+                                        <div class="trend-stat-change positive">↓ 15% vs prior</div>
+                                    </div>
+                                </div>
+                                <div class="trend-chart">
+                                    <div class="trend-point" style="height: 45%"></div>
+                                    <div class="trend-point" style="height: 48%"></div>
+                                    <div class="trend-point" style="height: 52%"></div>
+                                    <div class="trend-point" style="height: 55%"></div>
+                                    <div class="trend-point" style="height: 58%"></div>
+                                    <div class="trend-point" style="height: 62%"></div>
+                                    <div class="trend-point" style="height: 65%"></div>
+                                    <div class="trend-point" style="height: 70%"></div>
+                                    <div class="trend-point" style="height: 75%"></div>
+                                    <div class="trend-point" style="height: 80%"></div>
+                                    <div class="trend-point" style="height: 85%"></div>
+                                    <div class="trend-point" style="height: 92%"></div>
+                                </div>
+                                <div class="trend-labels">
+                                    <span class="trend-label">Mar</span>
+                                    <span class="trend-label">Apr</span>
+                                    <span class="trend-label">May</span>
+                                    <span class="trend-label">Jun</span>
+                                    <span class="trend-label">Jul</span>
+                                    <span class="trend-label">Aug</span>
+                                    <span class="trend-label">Sep</span>
+                                    <span class="trend-label">Oct</span>
+                                    <span class="trend-label">Nov</span>
+                                    <span class="trend-label">Dec</span>
+                                    <span class="trend-label">Jan</span>
+                                    <span class="trend-label">Feb</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI Insights -->
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <h2 class="card-title">AI-Powered Insights</h2>
+                            <span class="ai-badge">✨ AI Generated</span>
+                        </div>
+                        <a href="#" class="card-action">Refresh insights →</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="insights-grid">
+                            <div class="insight-card warning">
+                                <div class="insight-icon">⚠️</div>
+                                <div class="insight-content">
+                                    <div class="insight-title">High Span of Control in Engineering</div>
+                                    <div class="insight-desc">3 engineering managers have 12+ direct reports, which may impact team effectiveness and employee satisfaction. Consider adding team leads.</div>
+                                    <a href="#" class="insight-action">View affected managers →</a>
+                                </div>
+                            </div>
+                            
+                            <div class="insight-card success">
+                                <div class="insight-icon">✅</div>
+                                <div class="insight-content">
+                                    <div class="insight-title">Improved Retention in Sales</div>
+                                    <div class="insight-desc">Sales attrition dropped 23% this quarter after the comp restructure. Consider similar adjustments for Customer Success.</div>
+                                    <a href="#" class="insight-action">View retention report →</a>
+                                </div>
+                            </div>
+                            
+                            <div class="insight-card">
+                                <div class="insight-icon">💡</div>
+                                <div class="insight-content">
+                                    <div class="insight-title">Promotion Pipeline Gap</div>
+                                    <div class="insight-desc">42 employees have been at the same level for 3+ years without promotion. Review for growth opportunities or flight risk.</div>
+                                    <a href="#" class="insight-action">View employee list →</a>
+                                </div>
+                            </div>
+                            
+                            <div class="insight-card">
+                                <div class="insight-icon">🎯</div>
+                                <div class="insight-content">
+                                    <div class="insight-title">Skills Gap: ML/AI Expertise</div>
+                                    <div class="insight-desc">Only 12 employees have ML/AI skills. Based on product roadmap analysis, consider upskilling or hiring 15-20 ML engineers.</div>
+                                    <a href="#" class="insight-action">View hiring plan →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

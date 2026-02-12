@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workforce Planning | OrgViz Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e1b4b;
+            --primary-light: #312e81;
+            --accent: #7c3aed;
+            --accent-light: #a78bfa;
+            --accent-glow: rgba(124, 58, 237, 0.3);
+            --bg-light: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.4);
+            padding: 8px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, var(--accent) 0%, rgba(124, 58, 237, 0.7) 100%);
+            color: white;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--accent);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar */
+        .topbar {
+            height: 72px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 32px;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .scenario-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: 24px;
+        }
+
+        .scenario-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .scenario-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 240px;
+        }
+
+        .scenario-dropdown:hover {
+            border-color: var(--accent);
+        }
+
+        .scenario-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .scenario-status.draft {
+            background: var(--warning);
+        }
+
+        .scenario-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .scenario-chevron {
+            color: var(--text-muted);
+        }
+
+        .topbar-spacer {
+            flex: 1;
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            height: 40px;
+            padding: 0 20px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            border: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary);
+        }
+
+        /* Planning Layout */
+        .planning-layout {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Impact Panel */
+        .impact-panel {
+            width: 320px;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .panel-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .panel-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+        }
+
+        /* Impact Cards */
+        .impact-card {
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .impact-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .impact-card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .impact-card-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .impact-card-badge.increase {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .impact-card-badge.decrease {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .impact-card-badge.neutral {
+            background: rgba(100, 116, 139, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .impact-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .impact-comparison {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .impact-current {
+            color: var(--text-muted);
+        }
+
+        .impact-arrow {
+            color: var(--text-muted);
+        }
+
+        .impact-change {
+            font-weight: 600;
+        }
+
+        .impact-change.positive {
+            color: var(--success);
+        }
+
+        .impact-change.negative {
+            color: var(--danger);
+        }
+
+        /* Budget Card */
+        .budget-breakdown {
+            margin-top: 16px;
+        }
+
+        .budget-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .budget-row:last-child {
+            border-bottom: none;
+            padding-top: 12px;
+            font-weight: 600;
+        }
+
+        .budget-label {
+            color: var(--text-secondary);
+        }
+
+        .budget-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Comparison View */
+        .comparison-view {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            overflow: hidden;
+        }
+
+        .comparison-column {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .comparison-column:first-child {
+            border-right: 2px dashed var(--border);
+        }
+
+        .column-header {
+            padding: 16px 24px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .column-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .column-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .column-status.current {
+            background: var(--text-muted);
+        }
+
+        .column-status.draft {
+            background: var(--warning);
+        }
+
+        .column-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .column-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .column-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: var(--bg-light);
+        }
+
+        /* Department Cards */
+        .dept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .dept-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .dept-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .dept-icon.eng {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        }
+
+        .dept-icon.product {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+        }
+
+        .dept-icon.sales {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        }
+
+        .dept-info {
+            flex: 1;
+        }
+
+        .dept-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .dept-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .dept-headcount {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .headcount-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .headcount-change {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .headcount-change.up {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .headcount-change.down {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .dept-expand {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .dept-card-body {
+            padding: 16px 20px;
+        }
+
+        /* Employee Rows */
+        .employee-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            transition: background 0.15s;
+            cursor: move;
+        }
+
+        .employee-row:hover {
+            background: var(--bg-light);
+        }
+
+        .employee-row.dragging {
+            opacity: 0.5;
+            background: var(--accent-glow);
+        }
+
+        .drag-handle {
+            color: var(--text-muted);
+            cursor: grab;
+            font-size: 14px;
+        }
+
+        .employee-avatar-sm {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c7d2fe 0%, #a5b4fc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .employee-info-sm {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .employee-name-sm {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .employee-title-sm {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .employee-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .employee-row:hover .employee-actions {
+            opacity: 1;
+        }
+
+        .action-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-icon:hover {
+            background: var(--bg-light);
+            color: var(--text-primary);
+        }
+
+        /* Open Role */
+        .employee-row.open-role {
+            border: 2px dashed var(--accent-light);
+            background: rgba(124, 58, 237, 0.03);
+        }
+
+        .employee-row.open-role .employee-avatar-sm {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            border: 2px dashed var(--accent);
+        }
+
+        .open-role-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            color: var(--accent);
+            border-radius: 10px;
+        }
+
+        /* Drop Zone */
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            text-align: center;
+            margin-top: 12px;
+            transition: all 0.2s;
+        }
+
+        .drop-zone.active {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        .drop-zone-text {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Changes Badge */
+        .changes-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--warning);
+        }
+
+        .changes-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--warning);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Add Role Button */
+        .add-role-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            background: transparent;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 12px;
+        }
+
+        .add-role-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(124, 58, 237, 0.03);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="dashboard.html" class="logo">
+                    <div class="logo-icon">◈</div>
+                    <span class="logo-text">OrgViz Pro</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        Dashboard
+                    </a>
+                    <a href="org-chart.html" class="nav-item">
+                        <span class="nav-icon">🏛️</span>
+                        Org Chart
+                    </a>
+                    <a href="search.html" class="nav-item">
+                        <span class="nav-icon">👥</span>
+                        Directory
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Planning</div>
+                    <a href="workforce-planning.html" class="nav-item active">
+                        <span class="nav-icon">📐</span>
+                        Workforce Planning
+                        <span class="nav-badge">3</span>
+                    </a>
+                    <a href="analytics.html" class="nav-item">
+                        <span class="nav-icon">📈</span>
+                        Analytics
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="topbar">
+                <h1 class="page-title">Workforce Planning</h1>
+                
+                <div class="scenario-selector">
+                    <span class="scenario-label">Comparing:</span>
+                    <div class="scenario-dropdown">
+                        <span class="scenario-status draft"></span>
+                        <span class="scenario-name">Q2 2024 Reorg</span>
+                        <span class="scenario-chevron">▼</span>
+                    </div>
+                </div>
+                
+                <div class="topbar-spacer"></div>
+                
+                <div class="changes-indicator">
+                    <span class="changes-dot"></span>
+                    12 unsaved changes
+                </div>
+                
+                <div class="topbar-actions">
+                    <button class="btn btn-secondary">↩️ Discard</button>
+                    <button class="btn btn-secondary">📋 Duplicate</button>
+                    <button class="btn btn-primary">💾 Save Scenario</button>
+                </div>
+            </header>
+            
+            <!-- Planning Layout -->
+            <div class="planning-layout">
+                <!-- Impact Panel -->
+                <aside class="impact-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">Impact Summary</div>
+                        <div class="panel-subtitle">Changes vs. current structure</div>
+                    </div>
+                    
+                    <div class="panel-body">
+                        <div class="impact-card">
+                            <div class="impact-card-header">
+                                <span class="impact-card-title">Total Headcount</span>
+                                <span class="impact-card-badge increase">+8</span>
+                            </div>
+                            <div class="impact-value">2,855</div>
+                            <div class="impact-comparison">
+                                <span class="impact-current">Currently: 2,847</span>
+                                <span class="impact-arrow">→</span>
+                                <span class="impact-change negative">+0.3%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="impact-card">
+                            <div class="impact-card-header">
+                                <span class="impact-card-title">Open Roles</span>
+                                <span class="impact-card-badge increase">+14</span>
+                            </div>
+                            <div class="impact-value">81</div>
+                            <div class="impact-comparison">
+                                <span class="impact-current">Currently: 67</span>
+                                <span class="impact-arrow">→</span>
+                                <span class="impact-change negative">+20.9%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="impact-card">
+                            <div class="impact-card-header">
+                                <span class="impact-card-title">Avg Span of Control</span>
+                                <span class="impact-card-badge decrease">-0.4</span>
+                            </div>
+                            <div class="impact-value">5.8</div>
+                            <div class="impact-comparison">
+                                <span class="impact-current">Currently: 6.2</span>
+                                <span class="impact-arrow">→</span>
+                                <span class="impact-change positive">-6.5%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="impact-card">
+                            <div class="impact-card-header">
+                                <span class="impact-card-title">Annual Budget Impact</span>
+                                <span class="impact-card-badge increase">+$1.8M</span>
+                            </div>
+                            <div class="impact-value">$48.2M</div>
+                            <div class="impact-comparison">
+                                <span class="impact-current">Currently: $46.4M</span>
+                                <span class="impact-arrow">→</span>
+                                <span class="impact-change negative">+3.9%</span>
+                            </div>
+                            
+                            <div class="budget-breakdown">
+                                <div class="budget-row">
+                                    <span class="budget-label">New hires (14)</span>
+                                    <span class="budget-value">+$2.1M</span>
+                                </div>
+                                <div class="budget-row">
+                                    <span class="budget-label">Promotions (6)</span>
+                                    <span class="budget-value">+$180K</span>
+                                </div>
+                                <div class="budget-row">
+                                    <span class="budget-label">Attrition savings</span>
+                                    <span class="budget-value">-$480K</span>
+                                </div>
+                                <div class="budget-row">
+                                    <span class="budget-label">Net change</span>
+                                    <span class="budget-value" style="color: var(--danger);">+$1.8M</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+                
+                <!-- Comparison View -->
+                <div class="comparison-view">
+                    <!-- Current State -->
+                    <div class="comparison-column">
+                        <div class="column-header">
+                            <div class="column-title">
+                                <span class="column-status current"></span>
+                                <span class="column-name">Current State</span>
+                            </div>
+                            <span class="column-meta">As of Feb 12, 2024</span>
+                        </div>
+                        <div class="column-body">
+                            <!-- Engineering -->
+                            <div class="dept-card">
+                                <div class="dept-card-header">
+                                    <div class="dept-icon eng">⚙️</div>
+                                    <div class="dept-info">
+                                        <div class="dept-name">Engineering</div>
+                                        <div class="dept-meta">Rachel Lee • 4 directors</div>
+                                    </div>
+                                    <div class="dept-headcount">
+                                        <span class="headcount-value">842</span>
+                                    </div>
+                                    <span class="dept-expand">▼</span>
+                                </div>
+                                <div class="dept-card-body">
+                                    <div class="employee-row">
+                                        <span class="drag-handle">⋮⋮</span>
+                                        <div class="employee-avatar-sm">AT</div>
+                                        <div class="employee-info-sm">
+                                            <div class="employee-name-sm">Alex Torres</div>
+                                            <div class="employee-title-sm">Director, Backend • 8 reports</div>
+                                        </div>
+                                        <div class="employee-actions">
+                                            <button class="action-icon">✏️</button>
+                                            <button class="action-icon">↗️</button>
+                                        </div>
+                                    </div>
+                                    <div class="employee-row">
+                                        <span class="drag-handle">⋮⋮</span>
+                                        <div class="employee-avatar-sm">EH</div>
+                                        <div class="employee-info-sm">
+                                            <div class="employee-name-sm">Emma Hughes</div>
+                                            <div class="employee-title-sm">Director, Frontend • 6 reports</div>
+                                        </div>
+                                        <div class="employee-actions">
+                                            <button class="action-icon">✏️</button>
+                                            <button class="action-icon">↗️</button>
+                                        </div>
+                                    </div>
+                                    <div class="employee-row">
+                                        <span class="drag-handle">⋮⋮</span>
+                                        <div class="employee-avatar-sm">KP</div>
+                                        <div class="employee-info-sm">
+                                            <div class="employee-name-sm">Kevin Patel</div>
+                                            <div class="employee-title-sm">Director, Platform • 5 reports</div>
+                                        </div>
+                                        <div class="employee-actions">
+                                            <button class="action-icon">✏️</button>
+                                            <button class="action-icon">↗️</button>
+                                        </div>
+                                    </div>
+                                    <div class="employee-row">
+                                        <span class="drag-handle">⋮⋮</span>
+                                        <div class="employee-avatar-sm">JR</div>
+                                        <div class="employee-info-sm">
+                                            <div class="employee-name-sm">Julia Roberts</div>
+                                            <div class="employee-title-sm">Director, Security • 4 reports</div>
+                                        </div>
+                                        <div class="employee-actions">
+                                            <button class="action-icon">✏️</button>
+                                            <button class="action-icon">↗️</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Product -->
+                            <div class="dept-card">
+                                <div class="dept-card-header">
+                                    <div class="dept-icon product">🎯</div>
+                                    <div class="dept-info">
+                                        <div class="dept-name">Product</div>
+                                        <div class="dept-meta">David Wang • 3 directors</div>
+                                    </div>
+                                    <div class="dept-headcount">
+                                        <span class="headcount-value">156</span>
+                                    </div>
+                                    <span class="dept-expand">▶</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Sales -->
+                            <div class="dept-card">
+                                <div class="dept-card-header">
+                                    <div class="dept-icon sales">💰</div>
+                                    <div class="dept-info">
+                                        <div class="dept-name">Sales</div>
+                                        <div class="dept-meta">Jessica Parker • 6 directors</div>
+                                    </div>
+                                    <div class="dept-headcount">
+                                        <span class="headcount-value">534</span>
+                                    </div>
+                                    <span class="dept-expand">▶</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Planned State -->
+                    <div class="comparison-column">
+                        <div class="column-header">
+                            <div class="column-title">
+                                <span class="column-status draft"></span>
+                                <span class="column-name">Q2 2024 Reorg (Draft)</span>
+                            </div>
+                            <span class="column-meta">Last edited 2 hours ago</span>
+                        </div>
+                        <div class="column-body">
+                            <!-- Engineering -->
+                            <div class="dept-card">
+                                <div class="dept-card-header">
+                                    <div class="dept-icon eng">⚙️</div>
+                                    <div class="dept-info">
+                                        <div class="dept-name">Engineering</div>
+                                        <div class="dept-meta">Rachel Lee • 5 directors</div>
+                                    </div>
+                                    <div class="dept-headcount">
+                                        <span class="headcount-value">856</span>
+                                        <span class="headcount-change up">+14</span>
+                                    </div>
+                                    <span class="dept-expand">▼</span>
+                                </div>
+                                <div class="dept-card-body">
+                                    <div class="employee-row">
+                                        <span class="drag-handle">⋮⋮</span>
+                                        <div class="employee-avatar-sm">AT</div>
+                                        <div class="employee-info-sm">
+                                            <div class="employee-name-sm">Alex Torres</div>
+                                            <div class="employee-title-sm">Director, Backend • 8 reports</div>
+                                        </div>
+                                        <div class="employee-actions">
+                                            <button class="action-icon">✏️</button>
+                                            <button class="action-icon">↗️</button>
+                                        </div>
+                                    </div>
+                                    <div class="employee-row">
+                                        <span class="drag-handle">⋮⋮</span>
+                                        <div class="employee-avatar-sm">EH</div>
+                                        <div class="employee-info-sm">
+                                            <div class="employee-name-sm">Emma Hughes</div>
+                                            <div class="employee-title-sm">Director, Frontend • 6 reports</div>
+                                        </div>
+                                        <div class="employee-actions">
+                                            <button class="action-icon">✏️</button>
+                                            <button class="action-icon">↗️</button>
+                                        </div>
+                                    </div>
+                                    <div class="employee-row">
+                                        <span class="drag-handle">⋮⋮</span>
+                                        <div class="employee-avatar-sm">KP</div>
+                                        <div class="employee-info-sm">
+                                            <div class="employee-name-sm">Kevin Patel</div>
+                                            <div class="employee-title-sm">Director, Platform • 5 reports</div>
+                                        </div>
+                                        <div class="employee-actions">
+                                            <button class="action-icon">✏️</button>
+                                            <button class="action-icon">↗️</button>
+                                        </div>
+                                    </div>
+                                    <div class="employee-row">
+                                        <span class="drag-handle">⋮⋮</span>
+                                        <div class="employee-avatar-sm">JR</div>
+                                        <div class="employee-info-sm">
+                                            <div class="employee-name-sm">Julia Roberts</div>
+                                            <div class="employee-title-sm">Director, Security • 4 reports</div>
+                                        </div>
+                                        <div class="employee-actions">
+                                            <button class="action-icon">✏️</button>
+                                            <button class="action-icon">↗️</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Open Role -->
+                                    <div class="employee-row open-role">
+                                        <span class="drag-handle">⋮⋮</span>
+                                        <div class="employee-avatar-sm">?</div>
+                                        <div class="employee-info-sm">
+                                            <div class="employee-name-sm">Director, AI/ML</div>
+                                            <div class="employee-title-sm">New role • Reporting to Rachel Lee</div>
+                                        </div>
+                                        <span class="open-role-badge">Open Role</span>
+                                    </div>
+                                    
+                                    <button class="add-role-btn">
+                                        ➕ Add role or position
+                                    </button>
+                                    
+                                    <div class="drop-zone">
+                                        <span class="drop-zone-text">Drop here to move to Engineering</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Product -->
+                            <div class="dept-card">
+                                <div class="dept-card-header">
+                                    <div class="dept-icon product">🎯</div>
+                                    <div class="dept-info">
+                                        <div class="dept-name">Product</div>
+                                        <div class="dept-meta">David Wang • 3 directors</div>
+                                    </div>
+                                    <div class="dept-headcount">
+                                        <span class="headcount-value">162</span>
+                                        <span class="headcount-change up">+6</span>
+                                    </div>
+                                    <span class="dept-expand">▶</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Sales -->
+                            <div class="dept-card">
+                                <div class="dept-card-header">
+                                    <div class="dept-icon sales">💰</div>
+                                    <div class="dept-info">
+                                        <div class="dept-name">Sales</div>
+                                        <div class="dept-meta">Jessica Parker • 6 directors</div>
+                                    </div>
+                                    <div class="dept-headcount">
+                                        <span class="headcount-value">528</span>
+                                        <span class="headcount-change down">-6</span>
+                                    </div>
+                                    <span class="dept-expand">▶</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Toggle department expansion
+        document.querySelectorAll('.dept-card-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const card = header.closest('.dept-card');
+                const body = card.querySelector('.dept-card-body');
+                const expand = header.querySelector('.dept-expand');
+                
+                if (body) {
+                    body.style.display = body.style.display === 'none' ? 'block' : 'none';
+                    expand.textContent = body.style.display === 'none' ? '▶' : '▼';
+                }
+            });
+        });
+        
+        // Drag and drop simulation
+        document.querySelectorAll('.employee-row:not(.open-role)').forEach(row => {
+            row.setAttribute('draggable', 'true');
+            
+            row.addEventListener('dragstart', (e) => {
+                row.classList.add('dragging');
+            });
+            
+            row.addEventListener('dragend', (e) => {
+                row.classList.remove('dragging');
+            });
+        });
+        
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.classList.add('active');
+            });
+            
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('active');
+            });
+            
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>

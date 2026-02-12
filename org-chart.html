@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Org Chart | OrgViz Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e1b4b;
+            --primary-light: #312e81;
+            --accent: #7c3aed;
+            --accent-light: #a78bfa;
+            --accent-glow: rgba(124, 58, 237, 0.3);
+            --bg-light: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            /* Department Colors */
+            --dept-engineering: #3b82f6;
+            --dept-product: #8b5cf6;
+            --dept-sales: #10b981;
+            --dept-marketing: #f59e0b;
+            --dept-hr: #ec4899;
+            --dept-finance: #06b6d4;
+            --dept-executive: #7c3aed;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar (collapsed) */
+        .sidebar {
+            width: 72px;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-item {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 72px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            height: 64px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .breadcrumb-item {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb-item:hover {
+            color: var(--accent);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .breadcrumb-sep {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 32px;
+            background: var(--border);
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .toolbar-btn {
+            height: 36px;
+            padding: 0 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .toolbar-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .toolbar-btn.icon-only {
+            width: 36px;
+            padding: 0;
+            justify-content: center;
+        }
+
+        .toolbar-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .toolbar-spacer {
+            flex: 1;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            padding: 4px;
+        }
+
+        .view-toggle-btn {
+            padding: 6px 12px;
+            border: none;
+            background: none;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .view-toggle-btn.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 0 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.03) 0%, transparent 50%),
+                linear-gradient(90deg, var(--bg-light) 0%, #f1f5f9 100%);
+        }
+
+        .chart-canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            cursor: grab;
+            transform-origin: center center;
+            transition: transform 0.1s ease-out;
+        }
+
+        .chart-canvas:active {
+            cursor: grabbing;
+        }
+
+        /* Grid pattern */
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle, var(--border) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* Org Tree */
+        .org-tree {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tree-level {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        /* Employee Card */
+        .emp-card {
+            width: 200px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .emp-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .emp-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
+        }
+
+        .emp-card:hover::before {
+            opacity: 1;
+        }
+
+        .emp-card.selected {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow), var(--shadow-lg);
+        }
+
+        /* Department colors */
+        .emp-card.dept-executive { border-top: 4px solid var(--dept-executive); }
+        .emp-card.dept-executive::before { background: var(--dept-executive); }
+        
+        .emp-card.dept-engineering { border-top: 4px solid var(--dept-engineering); }
+        .emp-card.dept-engineering::before { background: var(--dept-engineering); }
+        
+        .emp-card.dept-product { border-top: 4px solid var(--dept-product); }
+        .emp-card.dept-product::before { background: var(--dept-product); }
+        
+        .emp-card.dept-sales { border-top: 4px solid var(--dept-sales); }
+        .emp-card.dept-sales::before { background: var(--dept-sales); }
+        
+        .emp-card.dept-hr { border-top: 4px solid var(--dept-hr); }
+        .emp-card.dept-hr::before { background: var(--dept-hr); }
+        
+        .emp-card.dept-finance { border-top: 4px solid var(--dept-finance); }
+        .emp-card.dept-finance::before { background: var(--dept-finance); }
+
+        .emp-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+            color: white;
+            position: relative;
+        }
+
+        .emp-avatar.executive { background: linear-gradient(135deg, var(--dept-executive) 0%, #9333ea 100%); }
+        .emp-avatar.engineering { background: linear-gradient(135deg, var(--dept-engineering) 0%, #1d4ed8 100%); }
+        .emp-avatar.product { background: linear-gradient(135deg, var(--dept-product) 0%, #6d28d9 100%); }
+        .emp-avatar.sales { background: linear-gradient(135deg, var(--dept-sales) 0%, #059669 100%); }
+        .emp-avatar.hr { background: linear-gradient(135deg, var(--dept-hr) 0%, #db2777 100%); }
+        .emp-avatar.finance { background: linear-gradient(135deg, var(--dept-finance) 0%, #0891b2 100%); }
+
+        .emp-status {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid white;
+            background: var(--success);
+        }
+
+        .emp-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .emp-title {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .emp-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .emp-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .emp-expand {
+            position: absolute;
+            bottom: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 28px;
+            height: 28px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .emp-expand:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: #faf5ff;
+        }
+
+        /* Dotted line relationship */
+        .emp-card.dotted-report {
+            border-style: dashed;
+        }
+
+        /* Connector Lines */
+        .connector {
+            position: absolute;
+            background: var(--border);
+            pointer-events: none;
+        }
+
+        .connector.vertical {
+            width: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .connector.horizontal {
+            height: 2px;
+            top: -40px;
+        }
+
+        .connector.dotted {
+            background: repeating-linear-gradient(
+                to bottom,
+                var(--text-muted) 0px,
+                var(--text-muted) 4px,
+                transparent 4px,
+                transparent 8px
+            );
+        }
+
+        /* Zoom Controls */
+        .zoom-controls {
+            position: absolute;
+            bottom: 100px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 8px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+
+        .zoom-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: none;
+            border-radius: var(--radius-sm);
+            font-size: 18px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-btn:hover {
+            background: var(--bg-light);
+            color: var(--text-primary);
+        }
+
+        .zoom-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .zoom-level {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 4px;
+        }
+
+        /* Minimap */
+        .minimap {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            width: 200px;
+            height: 140px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+
+        .minimap-header {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .minimap-canvas {
+            width: 100%;
+            height: calc(100% - 20px);
+            background: var(--bg-light);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .minimap-node {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            background: var(--accent);
+        }
+
+        .minimap-viewport {
+            position: absolute;
+            border: 2px solid var(--accent);
+            background: var(--accent-glow);
+            border-radius: 4px;
+            cursor: move;
+        }
+
+        /* Detail Panel (hidden by default) */
+        .detail-panel {
+            position: absolute;
+            top: 0;
+            right: -360px;
+            width: 360px;
+            height: 100%;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 50;
+            overflow-y: auto;
+        }
+
+        .detail-panel.open {
+            right: 0;
+        }
+
+        .detail-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .detail-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .detail-close:hover {
+            background: var(--danger);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar (Collapsed) -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon">◈</div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">📊</a>
+                <a href="org-chart.html" class="nav-item active">🏛️</a>
+                <a href="search.html" class="nav-item">👥</a>
+                <a href="workforce-planning.html" class="nav-item">📐</a>
+                <a href="analytics.html" class="nav-item">📈</a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <nav class="breadcrumb">
+                    <a href="#" class="breadcrumb-item">Acme Corp</a>
+                    <span class="breadcrumb-sep">›</span>
+                    <a href="#" class="breadcrumb-item">Engineering</a>
+                    <span class="breadcrumb-sep">›</span>
+                    <span class="breadcrumb-item active">Rachel Lee</span>
+                </nav>
+                
+                <div class="toolbar-divider"></div>
+                
+                <div class="toolbar-group">
+                    <button class="toolbar-btn icon-only" title="Fit to screen">⊡</button>
+                    <button class="toolbar-btn icon-only" title="Center view">◎</button>
+                </div>
+                
+                <div class="toolbar-divider"></div>
+                
+                <div class="view-toggle">
+                    <button class="view-toggle-btn active">Hierarchy</button>
+                    <button class="view-toggle-btn">Matrix</button>
+                    <button class="view-toggle-btn">Flat</button>
+                </div>
+                
+                <div class="toolbar-spacer"></div>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--dept-executive)"></div>
+                        Executive
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--dept-engineering)"></div>
+                        Engineering
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--dept-product)"></div>
+                        Product
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: var(--dept-sales)"></div>
+                        Sales
+                    </div>
+                </div>
+                
+                <div class="toolbar-divider"></div>
+                
+                <div class="toolbar-group">
+                    <button class="toolbar-btn">
+                        <span>⬇️</span>
+                        Export
+                    </button>
+                    <button class="toolbar-btn">
+                        <span>🔗</span>
+                        Share
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Chart Container -->
+            <div class="chart-container">
+                <div class="chart-canvas" id="chartCanvas">
+                    <div class="org-tree">
+                        <!-- Level 0: CEO -->
+                        <div class="tree-level">
+                            <div class="emp-card dept-executive selected" onclick="openProfile(this)">
+                                <div class="emp-avatar executive">
+                                    MJ
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">Michael Johnson</div>
+                                <div class="emp-title">Chief Executive Officer</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 5 direct</span>
+                                    <span class="emp-meta-item">📍 SF</span>
+                                </div>
+                                <button class="emp-expand">▼</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Level 1: C-Suite -->
+                        <div class="tree-level">
+                            <div class="emp-card dept-engineering" onclick="openProfile(this)">
+                                <div class="emp-avatar engineering">
+                                    RL
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">Rachel Lee</div>
+                                <div class="emp-title">VP Engineering</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 4 direct</span>
+                                    <span class="emp-meta-item">📍 SF</span>
+                                </div>
+                                <button class="emp-expand">▼</button>
+                            </div>
+                            
+                            <div class="emp-card dept-product" onclick="openProfile(this)">
+                                <div class="emp-avatar product">
+                                    DW
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">David Wang</div>
+                                <div class="emp-title">VP Product</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 3 direct</span>
+                                    <span class="emp-meta-item">📍 NYC</span>
+                                </div>
+                                <button class="emp-expand">▼</button>
+                            </div>
+                            
+                            <div class="emp-card dept-sales" onclick="openProfile(this)">
+                                <div class="emp-avatar sales">
+                                    JP
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">Jessica Parker</div>
+                                <div class="emp-title">VP Sales</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 6 direct</span>
+                                    <span class="emp-meta-item">📍 Chicago</span>
+                                </div>
+                                <button class="emp-expand">▼</button>
+                            </div>
+                            
+                            <div class="emp-card dept-hr" onclick="openProfile(this)">
+                                <div class="emp-avatar hr">
+                                    SK
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">Sarah Kim</div>
+                                <div class="emp-title">VP People</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 3 direct</span>
+                                    <span class="emp-meta-item">📍 SF</span>
+                                </div>
+                                <button class="emp-expand">▼</button>
+                            </div>
+                            
+                            <div class="emp-card dept-finance" onclick="openProfile(this)">
+                                <div class="emp-avatar finance">
+                                    BT
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">Brian Thompson</div>
+                                <div class="emp-title">CFO</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 2 direct</span>
+                                    <span class="emp-meta-item">📍 SF</span>
+                                </div>
+                                <button class="emp-expand">▼</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Level 2: Directors (Engineering) -->
+                        <div class="tree-level">
+                            <div class="emp-card dept-engineering" onclick="openProfile(this)">
+                                <div class="emp-avatar engineering">
+                                    AT
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">Alex Torres</div>
+                                <div class="emp-title">Director, Backend</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 8 direct</span>
+                                    <span class="emp-meta-item">📍 SF</span>
+                                </div>
+                                <button class="emp-expand">▼</button>
+                            </div>
+                            
+                            <div class="emp-card dept-engineering" onclick="openProfile(this)">
+                                <div class="emp-avatar engineering">
+                                    EH
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">Emma Hughes</div>
+                                <div class="emp-title">Director, Frontend</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 6 direct</span>
+                                    <span class="emp-meta-item">📍 NYC</span>
+                                </div>
+                                <button class="emp-expand">▼</button>
+                            </div>
+                            
+                            <div class="emp-card dept-engineering" onclick="openProfile(this)">
+                                <div class="emp-avatar engineering">
+                                    KP
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">Kevin Patel</div>
+                                <div class="emp-title">Director, Platform</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 5 direct</span>
+                                    <span class="emp-meta-item">📍 Austin</span>
+                                </div>
+                                <button class="emp-expand">▼</button>
+                            </div>
+                            
+                            <div class="emp-card dept-engineering dotted-report" onclick="openProfile(this)">
+                                <div class="emp-avatar engineering">
+                                    JR
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">Julia Roberts</div>
+                                <div class="emp-title">Director, Security</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 4 direct</span>
+                                    <span class="emp-meta-item">📍 Remote</span>
+                                </div>
+                                <button class="emp-expand">▼</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Level 3: Managers -->
+                        <div class="tree-level">
+                            <div class="emp-card dept-engineering" onclick="openProfile(this)">
+                                <div class="emp-avatar engineering">
+                                    MC
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">Maria Chen</div>
+                                <div class="emp-title">Engineering Manager</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 6 direct</span>
+                                </div>
+                            </div>
+                            
+                            <div class="emp-card dept-engineering" onclick="openProfile(this)">
+                                <div class="emp-avatar engineering">
+                                    RN
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">Robert Nelson</div>
+                                <div class="emp-title">Engineering Manager</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 5 direct</span>
+                                </div>
+                            </div>
+                            
+                            <div class="emp-card dept-engineering" onclick="openProfile(this)">
+                                <div class="emp-avatar engineering">
+                                    LM
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">Lisa Martinez</div>
+                                <div class="emp-title">Engineering Manager</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 4 direct</span>
+                                </div>
+                            </div>
+                            
+                            <div class="emp-card dept-engineering" onclick="openProfile(this)">
+                                <div class="emp-avatar engineering">
+                                    JT
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">James Taylor</div>
+                                <div class="emp-title">Engineering Manager</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 7 direct</span>
+                                </div>
+                            </div>
+                            
+                            <div class="emp-card dept-engineering" onclick="openProfile(this)">
+                                <div class="emp-avatar engineering">
+                                    AS
+                                    <span class="emp-status"></span>
+                                </div>
+                                <div class="emp-name">Aisha Singh</div>
+                                <div class="emp-title">Engineering Manager</div>
+                                <div class="emp-meta">
+                                    <span class="emp-meta-item">👤 5 direct</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Zoom Controls -->
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomIn()">+</button>
+                    <div class="zoom-level" id="zoomLevel">100%</div>
+                    <button class="zoom-btn" onclick="zoomOut()">−</button>
+                    <div class="zoom-divider"></div>
+                    <button class="zoom-btn" onclick="resetZoom()">⊙</button>
+                </div>
+                
+                <!-- Minimap -->
+                <div class="minimap">
+                    <div class="minimap-header">Minimap</div>
+                    <div class="minimap-canvas">
+                        <div class="minimap-node" style="top: 10%; left: 48%;"></div>
+                        <div class="minimap-node" style="top: 30%; left: 15%;"></div>
+                        <div class="minimap-node" style="top: 30%; left: 32%;"></div>
+                        <div class="minimap-node" style="top: 30%; left: 48%;"></div>
+                        <div class="minimap-node" style="top: 30%; left: 64%;"></div>
+                        <div class="minimap-node" style="top: 30%; left: 80%;"></div>
+                        <div class="minimap-node" style="top: 55%; left: 20%;"></div>
+                        <div class="minimap-node" style="top: 55%; left: 35%;"></div>
+                        <div class="minimap-node" style="top: 55%; left: 50%;"></div>
+                        <div class="minimap-node" style="top: 55%; left: 65%;"></div>
+                        <div class="minimap-node" style="top: 75%; left: 15%;"></div>
+                        <div class="minimap-node" style="top: 75%; left: 30%;"></div>
+                        <div class="minimap-node" style="top: 75%; left: 45%;"></div>
+                        <div class="minimap-node" style="top: 75%; left: 60%;"></div>
+                        <div class="minimap-node" style="top: 75%; left: 75%;"></div>
+                        <div class="minimap-viewport" style="top: 5%; left: 30%; width: 40%; height: 50%;"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        let zoom = 1;
+        const canvas = document.getElementById('chartCanvas');
+        const zoomLevel = document.getElementById('zoomLevel');
+        
+        function zoomIn() {
+            zoom = Math.min(zoom + 0.1, 2);
+            updateZoom();
+        }
+        
+        function zoomOut() {
+            zoom = Math.max(zoom - 0.1, 0.5);
+            updateZoom();
+        }
+        
+        function resetZoom() {
+            zoom = 1;
+            updateZoom();
+        }
+        
+        function updateZoom() {
+            canvas.style.transform = `scale(${zoom})`;
+            zoomLevel.textContent = Math.round(zoom * 100) + '%';
+        }
+        
+        function openProfile(element) {
+            window.location.href = 'employee-profile.html';
+        }
+        
+        // Pan functionality
+        let isPanning = false;
+        let startX, startY, scrollLeft, scrollTop;
+        
+        const container = document.querySelector('.chart-container');
+        
+        container.addEventListener('mousedown', (e) => {
+            if (e.target === container || e.target === canvas) {
+                isPanning = true;
+                startX = e.pageX - container.offsetLeft;
+                startY = e.pageY - container.offsetTop;
+                scrollLeft = container.scrollLeft;
+                scrollTop = container.scrollTop;
+            }
+        });
+        
+        container.addEventListener('mouseup', () => {
+            isPanning = false;
+        });
+        
+        container.addEventListener('mousemove', (e) => {
+            if (!isPanning) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const y = e.pageY - container.offsetTop;
+            const walkX = (x - startX) * 2;
+            const walkY = (y - startY) * 2;
+            container.scrollLeft = scrollLeft - walkX;
+            container.scrollTop = scrollTop - walkY;
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '+' || e.key === '=') zoomIn();
+            if (e.key === '-') zoomOut();
+            if (e.key === '0') resetZoom();
+        });
+    </script>
+</body>
+</html>
